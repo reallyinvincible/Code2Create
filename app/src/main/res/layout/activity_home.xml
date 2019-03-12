@@ -7,34 +7,68 @@
     android:background="@color/colorPrimaryDark"
     tools:context=".activities.HomeActivity">
 
+    <FrameLayout
+        android:id="@+id/fl_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="42dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_corner_bottom_sheet"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:behavior_peekHeight="60dp">
+        app:behavior_peekHeight="60dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="60dp">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_navigation"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
                 android:layout_width="50dp"
-                app:icon="@drawable/ic_menu"
-                app:iconSize="24dp"
-                app:iconTint="@android:color/black"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                app:icon="@drawable/ic_menu"
+                app:iconSize="24dp"
+                app:iconTint="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_alerts"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:icon="@drawable/ic_alert_outlined"
+                app:iconSize="24dp"
+                app:iconTint="@android:color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:icon="@drawable/ic_bookmark_outlined"
+                app:iconSize="24dp"
+                app:iconTint="@android:color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_alerts"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
     </LinearLayout>
 
