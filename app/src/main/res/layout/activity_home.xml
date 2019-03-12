@@ -11,16 +11,20 @@
         android:id="@+id/fl_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="42dp"/>
+        android:layout_marginBottom="42dp" />
 
     <LinearLayout
+        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner_bottom_sheet"
+        android:animateLayoutChanges="true"
+        android:background="@drawable/rounded_corner_bottom_sheet_accent"
+        android:orientation="vertical"
         app:behavior_peekHeight="60dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_bottom_bar_container"
             android:layout_width="match_parent"
             android:layout_height="60dp">
 
@@ -32,6 +36,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/transparent"
                 app:icon="@drawable/ic_menu"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/black"
@@ -47,6 +52,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/transparent"
                 app:icon="@drawable/ic_alert_outlined"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/black"
@@ -55,12 +61,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_bookmarks"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/transparent"
                 app:icon="@drawable/ic_bookmark_outlined"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/black"
@@ -68,7 +76,26 @@
                 app:layout_constraintEnd_toStartOf="@id/btn_alerts"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_close_bottom_sheet"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/transparent"
+                app:icon="@drawable/ic_close"
+                android:visibility="gone"
+                app:iconSize="24dp"
+                app:iconTint="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include layout="@layout/bottom_sheet_menu" />
 
     </LinearLayout>
 
