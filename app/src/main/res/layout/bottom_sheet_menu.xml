@@ -5,18 +5,21 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/ll_agenda_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_agenda"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_agenda"/>
 
         <TextView
+            android:id="@+id/tv_agenda"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Agenda"
@@ -27,18 +30,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_prizes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_prizes"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_prizes"/>
 
         <TextView
+            android:id="@+id/tv_prizes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Prizes"
@@ -49,18 +55,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_coupons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_coupons"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_coupons"/>
 
         <TextView
+            android:id="@+id/tv_coupons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Food Coupons"
@@ -71,18 +80,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_sponsors_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_sponsors"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_sponsors"/>
 
         <TextView
+            android:id="@+id/tv_sponsors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sponsors"
@@ -93,18 +105,21 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_about_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_about"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_about"/>
 
         <TextView
+            android:id="@+id/tv_about"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="About"
@@ -115,12 +130,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_faqs_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_margin="8dp">
 
         <ImageView
+            android:id="@+id/iv_faqs"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,6 +145,7 @@
             android:src="@drawable/ic_faqs"/>
 
         <TextView
+            android:id="@+id/tv_faqs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="FAQs"
@@ -138,6 +156,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_logout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -147,12 +166,14 @@
         android:layout_marginBottom="16dp">
 
         <ImageView
+            android:id="@+id/iv_logout"
             android:layout_marginStart="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_logout"/>
 
         <TextView
+            android:id="@+id/tv_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Logout"

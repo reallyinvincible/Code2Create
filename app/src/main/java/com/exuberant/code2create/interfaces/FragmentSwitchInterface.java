@@ -1,4 +1,4 @@
-package com.exuberant.code2create;
+package com.exuberant.code2create.interfaces;
 
 public interface FragmentSwitchInterface {
     void switchToAbout();
@@ -7,5 +7,5 @@ public interface FragmentSwitchInterface {
     void switchToCoupons();
     void switchToPrizes();
     void switchToSponsors();
-
+    void switchToError();
 }

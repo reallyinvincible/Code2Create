@@ -7,10 +7,10 @@ import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.exuberant.code2create.FragmentSwitchInterface;
+import com.exuberant.code2create.fragments.ErrorFragment;
+import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
@@ -25,9 +25,6 @@ public class HomeActivity extends AppCompatActivity {
     static FragmentSwitchInterface fragmentSwitchInterface;
     private MaterialButton navigationButton, bookmarkButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
-    private static final int BOOKMARK_SELECTED = 1;
-    private static final int ALERT_SELECTED = 2;
-    private int currentState;
     BottomSheetBehavior bottomSheetBehavior;
 
     @Override
@@ -37,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeViews();
 
-        //HomeActivity.getFragmentSwitchInterface().switchToSponsors();
+        HomeActivity.getFragmentSwitchInterface().switchToError();
 
         fragmentSwitchInterface = new FragmentSwitchInterface() {
             @Override
@@ -68,6 +65,11 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void switchToSponsors() {
                 switchFragment(new SponsorsFragment());
+            }
+
+            @Override
+            public void switchToError() {
+                switchFragment(new ErrorFragment());
             }
         };
 
