@@ -1,30 +1,30 @@
 package com.exuberant.code2create.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.transition.Fade;
-
 import android.os.Bundle;
-import android.transition.Explode;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.exuberant.code2create.fragments.AlertFragment;
-import com.exuberant.code2create.fragments.BookmarkFragment;
-import com.exuberant.code2create.fragments.ErrorFragment;
-import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
+import com.exuberant.code2create.fragments.AlertFragment;
+import com.exuberant.code2create.fragments.BookmarkFragment;
+import com.exuberant.code2create.fragments.ErrorFragment;
+import com.exuberant.code2create.fragments.FaqsFragment;
 import com.exuberant.code2create.fragments.FoodCouponsFragment;
 import com.exuberant.code2create.fragments.PrizesFragment;
 import com.exuberant.code2create.fragments.SponsorsFragment;
+import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.transition.Fade;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void switchToFaq() {
-                switchFragment(new AgendaFragment());
+                switchFragment(new FaqsFragment());
             }
 
             @Override
@@ -124,6 +124,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void switchFragment(Fragment fragment){
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         fragment.setEnterTransition(new Fade());
         fragment.setExitTransition(new Fade());
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -217,6 +218,7 @@ public class HomeActivity extends AppCompatActivity {
                 agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
                 agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 fragmentSwitchInterface.switchToAgenda();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
@@ -228,6 +230,7 @@ public class HomeActivity extends AppCompatActivity {
                 faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
                 faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 fragmentSwitchInterface.switchToFaq();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
@@ -239,6 +242,7 @@ public class HomeActivity extends AppCompatActivity {
                 couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
                 couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 fragmentSwitchInterface.switchToCoupons();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
@@ -250,6 +254,7 @@ public class HomeActivity extends AppCompatActivity {
                 prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
                 prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 fragmentSwitchInterface.switchToPrizes();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
@@ -261,6 +266,7 @@ public class HomeActivity extends AppCompatActivity {
                 sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
                 sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
                 fragmentSwitchInterface.switchToSponsors();
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
     }

@@ -9,7 +9,29 @@
     <string name="winner">Winner</string>
     <string name="best_ui_ux">Best UI/UX</string>
     <string name="second_place">Second Place</string>
-    <string name="here_s_some_motivation">Here\'s some motivation...</string>
+    <string name="here_s_some_motivation">Here\'s some motivation…</string>
     <string name="prizes">Prizes</string>
     <string name="third_place">Third Place</string>
+
+    <string name="sponsors">Sponsors</string>
+    <string name="without_them_all_of_this_wouldn_t_be_possible">Without them, all of this wouldn’t be possible</string>
+
+    <string name="about">About</string>
+    <string name="knowledge_is_power_know_more">Knowledge is power, know more.</string>
+
+    <string name="agenda">Agenda</string>
+    <string name="view_the_timeline_of_the_event">View the timeline of the event.</string>
+
+    <string name="alerts">Alerts</string>
+    <string name="missed_a_previous_one">Missed a previous one?</string>
+
+    <string name="faq_s">FAQ\'s</string>
+    <string name="clear_all_your_doubts_here">Clear all your doubts here</string>
+
+    <string name="something_wrong"><u>Something Wrong?</u></string>
+
+    <style name="redeem">REDEEM</style>
+
+    <style name="redeemed">REDEEMED</style>
+
 </resources>
