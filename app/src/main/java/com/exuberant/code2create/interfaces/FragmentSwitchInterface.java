@@ -8,4 +8,6 @@ public interface FragmentSwitchInterface {
     void switchToPrizes();
     void switchToSponsors();
     void switchToError();
+    void switchToAlerts();
+    void switchToBookmarks();
 }

@@ -4,11 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.transition.Fade;
 
 import android.os.Bundle;
+import android.transition.Explode;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.exuberant.code2create.fragments.AlertFragment;
+import com.exuberant.code2create.fragments.BookmarkFragment;
 import com.exuberant.code2create.fragments.ErrorFragment;
 import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.exuberant.code2create.R;
@@ -26,6 +32,9 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialButton navigationButton, bookmarkButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
     BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer;
+    private ImageView aboutImageView, agendaImageView, faqImageView, couponsImageView, prizesImageView, sponsorsImageView;
+    private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +42,6 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         initializeViews();
-
-        HomeActivity.getFragmentSwitchInterface().switchToError();
 
         fragmentSwitchInterface = new FragmentSwitchInterface() {
             @Override
@@ -71,6 +78,16 @@ public class HomeActivity extends AppCompatActivity {
             public void switchToError() {
                 switchFragment(new ErrorFragment());
             }
+
+            @Override
+            public void switchToAlerts() {
+                switchFragment(new AlertFragment());
+            }
+
+            @Override
+            public void switchToBookmarks() {
+                switchFragment(new BookmarkFragment());
+            }
         };
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -98,6 +115,54 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+        setupBottomAppBarButtonListeners();
+
+        setupMenuListeners();
+
+        HomeActivity.getFragmentSwitchInterface().switchToError();
+
+    }
+
+    void switchFragment(Fragment fragment){
+        fragment.setEnterTransition(new Fade());
+        fragment.setExitTransition(new Fade());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fl_fragment_container, fragment).commit();
+    }
+
+    public static FragmentSwitchInterface getFragmentSwitchInterface() {
+        return fragmentSwitchInterface;
+    }
+
+    void initializeViews(){
+        navigationButton = findViewById(R.id.btn_navigation);
+        alertButton = findViewById(R.id.btn_alerts);
+        bookmarkButton = findViewById(R.id.btn_bookmarks);
+        bottomSheetLayout = findViewById(R.id.bottom_sheet);
+        closeButton = findViewById(R.id.btn_close_bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+        aboutContainer = findViewById(R.id.ll_about_container);
+        aboutImageView = findViewById(R.id.iv_about);
+        aboutTextView = findViewById(R.id.tv_about);
+        agendaContainer = findViewById(R.id.ll_agenda_container);
+        agendaImageView = findViewById(R.id.iv_agenda);
+        agendaTextView = findViewById(R.id.tv_agenda);
+        faqContainer = findViewById(R.id.ll_faqs_container);
+        faqImageView = findViewById(R.id.iv_faqs);
+        faqTextView  = findViewById(R.id.tv_faqs);
+        couponsContainer = findViewById(R.id.ll_coupons_container);
+        couponsImageView = findViewById(R.id.iv_coupons);
+        couponsTextView = findViewById(R.id.tv_coupons);
+        prizesContainer = findViewById(R.id.ll_prizes_container);
+        prizesImageView = findViewById(R.id.iv_prizes);
+        prizesTextView = findViewById(R.id.tv_prizes);
+        sponsorsContainer = findViewById(R.id.ll_sponsors_container);
+        sponsorsImageView = findViewById(R.id.iv_sponsors);
+        sponsorsTextView = findViewById(R.id.tv_sponsors);
+    }
+
+    void setupBottomAppBarButtonListeners(){
+
         navigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,41 +181,111 @@ public class HomeActivity extends AppCompatActivity {
         alertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_outlined));
+                clearAllTints();
                 alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alerts_filled));
+                fragmentSwitchInterface.switchToAlerts();
             }
         });
 
         bookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearAllTints();
                 bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_filled));
-                alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
+                fragmentSwitchInterface.switchToBookmarks();
+            }
+        });
+    }
+
+    void setupMenuListeners(){
+        aboutContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                aboutContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about_tint));
+                aboutTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToAbout();
             }
         });
 
+        agendaContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
+                agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToAgenda();
+            }
+        });
+
+        faqContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                faqContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
+                faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToFaq();
+            }
+        });
+
+        couponsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                couponsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
+                couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToCoupons();
+            }
+        });
+
+        prizesContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                prizesContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
+                prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToPrizes();
+            }
+        });
+
+        sponsorsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clearAllTints();
+                sponsorsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+                sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
+                sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+                fragmentSwitchInterface.switchToSponsors();
+            }
+        });
     }
 
-    void switchFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fl_fragment_container, fragment).commit();
-    }
-
-    public static FragmentSwitchInterface getFragmentSwitchInterface() {
-        return fragmentSwitchInterface;
-    }
-
-    public static void setFragmentSwitchInterface(FragmentSwitchInterface fragmentSwitchInterface) {
-        HomeActivity.fragmentSwitchInterface = fragmentSwitchInterface;
-    }
-
-    void initializeViews(){
-        navigationButton = findViewById(R.id.btn_navigation);
-        alertButton = findViewById(R.id.btn_alerts);
-        bookmarkButton = findViewById(R.id.btn_bookmarks);
-        bottomSheetLayout = findViewById(R.id.bottom_sheet);
-        closeButton = findViewById(R.id.btn_close_bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+    void clearAllTints(){
+        aboutContainer.setBackgroundResource(0);
+        aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about));
+        aboutTextView.setTextColor(getResources().getColor(R.color.textColor));
+        agendaContainer.setBackgroundResource(0);
+        agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda));
+        agendaTextView.setTextColor(getResources().getColor(R.color.textColor));
+        faqContainer.setBackgroundResource(0);
+        faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs));
+        faqTextView.setTextColor(getResources().getColor(R.color.textColor));
+        couponsContainer.setBackgroundResource(0);
+        couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons));
+        couponsTextView.setTextColor(getResources().getColor(R.color.textColor));
+        prizesContainer.setBackgroundResource(0);
+        prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes));
+        prizesTextView.setTextColor(getResources().getColor(R.color.textColor));
+        sponsorsContainer.setBackgroundResource(0);
+        sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors));
+        sponsorsTextView.setTextColor(getResources().getColor(R.color.textColor));
+        bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_outlined));
+        alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
     }
 
 }

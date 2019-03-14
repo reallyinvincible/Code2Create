@@ -5,15 +5,16 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_agenda_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_agenda"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_agenda"/>
@@ -30,15 +31,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_prizes_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_prizes"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_prizes"/>
@@ -55,15 +57,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_coupons_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_coupons"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_coupons"/>
@@ -80,15 +83,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_sponsors_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_sponsors"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_sponsors"/>
@@ -105,15 +109,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_about_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_about"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_about"/>
@@ -130,15 +135,16 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_faqs_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_faqs"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tint="@android:color/white"
@@ -156,18 +162,17 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="8dp"
         android:id="@+id/ll_logout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="32dp">
 
         <ImageView
             android:id="@+id/iv_logout"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_logout"/>
