@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Code2Create</string>
+
+    <string name="Rs20000">\u20B920000</string>
+    <string name="Rs15000">\u20B915000</string>
+    <string name="Rs10000">\u20B910000</string>
+    <string name="Rs5000">\u20B95000</string>
+
+    <string name="winner">Winner</string>
+    <string name="best_ui_ux">Best UI/UX</string>
+    <string name="second_place">Second Place</string>
+    <string name="here_s_some_motivation">Here\'s some motivation...</string>
+    <string name="prizes">Prizes</string>
+    <string name="third_place">Third Place</string>
 </resources>
