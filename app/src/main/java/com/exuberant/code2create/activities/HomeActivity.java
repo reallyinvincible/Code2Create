@@ -128,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
         fragment.setEnterTransition(new Fade());
         fragment.setExitTransition(new Fade());
         FragmentManager fragmentManager = getSupportFragmentManager();
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         fragmentManager.beginTransaction().replace(R.id.fl_fragment_container, fragment).commit();
     }
 
