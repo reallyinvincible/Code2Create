@@ -1,5 +1,6 @@
 package com.exuberant.code2create.activities;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,12 @@ import com.exuberant.code2create.fragments.SponsorsFragment;
 import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -93,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED){
+                if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_accent));
                     navigationButton.setVisibility(View.VISIBLE);
                     alertButton.setVisibility(View.VISIBLE);
@@ -121,9 +128,10 @@ public class HomeActivity extends AppCompatActivity {
 
         HomeActivity.getFragmentSwitchInterface().switchToError();
 
+        requestMicrophonePermissions();
     }
 
-    void switchFragment(Fragment fragment){
+    void switchFragment(Fragment fragment) {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         fragment.setEnterTransition(new Fade());
         fragment.setExitTransition(new Fade());
@@ -136,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
         return fragmentSwitchInterface;
     }
 
-    void initializeViews(){
+    void initializeViews() {
         navigationButton = findViewById(R.id.btn_navigation);
         alertButton = findViewById(R.id.btn_alerts);
         bookmarkButton = findViewById(R.id.btn_bookmarks);
@@ -151,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
         agendaTextView = findViewById(R.id.tv_agenda);
         faqContainer = findViewById(R.id.ll_faqs_container);
         faqImageView = findViewById(R.id.iv_faqs);
-        faqTextView  = findViewById(R.id.tv_faqs);
+        faqTextView = findViewById(R.id.tv_faqs);
         couponsContainer = findViewById(R.id.ll_coupons_container);
         couponsImageView = findViewById(R.id.iv_coupons);
         couponsTextView = findViewById(R.id.tv_coupons);
@@ -163,7 +171,7 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsTextView = findViewById(R.id.tv_sponsors);
     }
 
-    void setupBottomAppBarButtonListeners(){
+    void setupBottomAppBarButtonListeners() {
 
         navigationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +207,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    void setupMenuListeners(){
+    void setupMenuListeners() {
         aboutContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -272,7 +280,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    void clearAllTints(){
+    void clearAllTints() {
         aboutContainer.setBackgroundResource(0);
         aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about));
         aboutTextView.setTextColor(getResources().getColor(R.color.textColor));
@@ -295,4 +303,27 @@ public class HomeActivity extends AppCompatActivity {
         alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
     }
 
+    void requestMicrophonePermissions() {
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.RECORD_AUDIO)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+//                        Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                        couponsContainer.setEnabled(true);
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+//                        Toast.makeText(HomeActivity.this, "Please Give Permission to Record Audio", Toast.LENGTH_SHORT).show();
+                        couponsContainer.setEnabled(false);
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .check();
+    }
 }
