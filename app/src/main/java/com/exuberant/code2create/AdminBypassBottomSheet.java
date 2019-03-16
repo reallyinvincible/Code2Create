@@ -32,7 +32,8 @@ public class AdminBypassBottomSheet extends BottomSheetDialogFragment {
         adminSecretButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (bypassPassword.getText().toString() == pass){
+                String bypass = bypassPassword.getText().toString();
+                if (bypass.equals(pass)){
                     FoodCouponsFragment.getAdminBypassInterface().bypassScan(bypassString.getText().toString());
                 }
             }
