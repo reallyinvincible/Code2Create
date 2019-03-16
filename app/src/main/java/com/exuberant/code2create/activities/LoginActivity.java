@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.models.Agenda;
@@ -12,23 +13,28 @@ import com.exuberant.code2create.models.AgendaModel;
 import com.exuberant.code2create.models.User;
 import com.exuberant.code2create.models.UserModel;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
+import static com.exuberant.code2create.interfaces.UtilsInterface.get_SHA_512_password;
+import static com.exuberant.code2create.interfaces.UtilsInterface.transformString;
 
 public class LoginActivity extends AppCompatActivity {
 
     FirebaseDatabase mDatabase;
     DatabaseReference mUserReference;
     DatabaseReference mAgendaReference;
+    DatabaseReference mAllUsersReference;
 
     private final static String SHA_SALT = "ACM_Rocks";
 
@@ -57,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                     String email = emailET.getText().toString();
                     String password = passwordET.getText().toString();
                     String securedPass = get_SHA_512_password(password, SHA_SALT);
+                    Toast.makeText(LoginActivity.this, transformString(email), Toast.LENGTH_SHORT).show();
                     checkUser(email, securedPass);
 //                    launchHome();
                 } else {
@@ -96,14 +103,26 @@ public class LoginActivity extends AppCompatActivity {
     void initializeView() {
         constraintLayout = findViewById(R.id.cl_login);
         loginButton = findViewById(R.id.btn_login);
-        mDatabase = FirebaseDatabase.getInstance();
-        mAgendaReference = mDatabase.getReference().child("agendas");
-        mUserReference = mDatabase.getReference().child("users_test");
         emailET = findViewById(R.id.et_email);
         passwordET = findViewById(R.id.et_password);
+        mDatabase = FirebaseDatabase.getInstance();
+        mAgendaReference = mDatabase.getReference().child("agendas");
+        mUserReference = mDatabase.getReference().child("users");
+        mAllUsersReference = mDatabase.getReference().child("users").child("userList");
     }
 
     void checkUser(String email, String password) {
+        mAllUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -116,22 +135,5 @@ public class LoginActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundResource(R.color.colorAccent);
         snackbar.show();
-    }
-
-    public String get_SHA_512_password(String password_to_hash, String salt) {
-        String generatedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt.getBytes(StandardCharsets.UTF_8));
-            byte[] bytes = md.digest(password_to_hash.getBytes(StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for (byte aByte : bytes) {
-                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
-            }
-            generatedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return generatedPassword;
     }
 }
