@@ -18,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,8 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mAgendaReference.setValue(model);
-//                mUserReference.setValue(userModel);
+                mAgendaReference.setValue(model);
+                mUserReference.setValue(userModel);
 
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                     String email = emailET.getText().toString();
@@ -80,14 +81,16 @@ public class LoginActivity extends AppCompatActivity {
         model = new AgendaModel(agendaList);*/
 
 
-        /*User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
+        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
         User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
         User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
         userList = new ArrayList<>();
         userList.add(user1);
         userList.add(user2);
         userList.add(user3);
-        userModel = new UserModel(userList);*/
+        userModel = new UserModel(userList);
+        mAgendaReference.setValue(model);
+        mUserReference.setValue(userModel);
     }
 
     void initializeView() {
@@ -95,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.btn_login);
         mDatabase = FirebaseDatabase.getInstance();
         mAgendaReference = mDatabase.getReference().child("agendas");
-        mUserReference = mDatabase.getReference().child("users");
+        mUserReference = mDatabase.getReference().child("users_test");
         emailET = findViewById(R.id.et_email);
         passwordET = findViewById(R.id.et_password);
     }

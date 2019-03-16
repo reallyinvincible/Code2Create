@@ -25,9 +25,6 @@ public class AgendaFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         Date currentTime = Calendar.getInstance().getTime();
-
-
-
         return view;
     }
 }

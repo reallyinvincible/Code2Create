@@ -10,9 +10,6 @@ public class UserModel {
         this.userList = userList;
     }
 
-    public UserModel() {
-    }
-
     public List<User> getUserList() {
         return userList;
     }

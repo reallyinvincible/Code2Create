@@ -1,29 +1,30 @@
 package com.exuberant.code2create.models;
 
 public class User {
-    String userEmail;
-    String password;
-    boolean isExternal;
-    boolean isSelected;
-    String wifiCoupon;
 
-    public User(String userEmail, String password, boolean isExternal, boolean isSelected, String wifiCoupon) {
-        this.userEmail = userEmail;
-        this.password = password;
-        this.isExternal = isExternal;
-        this.isSelected = isSelected;
-        this.wifiCoupon = wifiCoupon;
-    }
+    String email;
+    String password;
+    boolean externalParticipant;
+    boolean selectedForNextRound;
+    String wifiCoupon;
 
     public User() {
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public User(String email, String password, boolean externalParticipant, boolean selectedForNextRound, String wifiCoupon) {
+        this.email = email;
+        this.password = password;
+        this.externalParticipant = externalParticipant;
+        this.selectedForNextRound = selectedForNextRound;
+        this.wifiCoupon = wifiCoupon;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -34,20 +35,20 @@ public class User {
         this.password = password;
     }
 
-    public boolean isExternal() {
-        return isExternal;
+    public boolean isExternalParticipant() {
+        return externalParticipant;
     }
 
-    public void setExternal(boolean external) {
-        isExternal = external;
+    public void setExternalParticipant(boolean externalParticipant) {
+        this.externalParticipant = externalParticipant;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public boolean isSelectedForNextRound() {
+        return selectedForNextRound;
     }
 
-    public void setSelected(boolean selected) {
-        isSelected = selected;
+    public void setSelectedForNextRound(boolean selectedForNextRound) {
+        this.selectedForNextRound = selectedForNextRound;
     }
 
     public String getWifiCoupon() {
