@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.models.Scannable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +48,8 @@ public class FoodCouponsFragment extends Fragment {
     private TextView timeCoupon1, timeCoupon2, timeCoupon3;
     private ImageView statusCoupon1, statusCoupon2, statusCoupon3;
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
+
+    Scannable scannable1;
 
     @Nullable
     @Override
@@ -87,11 +90,24 @@ public class FoodCouponsFragment extends Fragment {
         btnAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ripple.playAnimation();
-                chirp.start();
                 listen();
             }
         });
+
+
+        //------------Scannable testing-------------
+        scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 AM", "2:00 AM", "food");
+
+        titleCoupon1.setText(scannable1.getScannableTitle());
+        timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
+        statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
+        statusCoupon1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listen();
+            }
+        });
+
 
         return view;
     }
@@ -129,6 +145,8 @@ public class FoodCouponsFragment extends Fragment {
     }
 
     private void listen() {
+        ripple.playAnimation();
+        chirp.start();
         ConnectEventListener chirpEventListener = new ConnectEventListener() {
 
             @Override
@@ -152,7 +170,13 @@ public class FoodCouponsFragment extends Fragment {
                 if (data != null) {
                     String identifier = new String(data);
                     Log.v("ChirpSDK: ", "Received " + identifier);
-                    updatePayload(identifier);
+
+                    if (!identifier.equals(scannable1.getScannableKey())) {
+                        Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
+                    } else {
+                        updatePayload(identifier);
+                    }
+                    ripple.pauseAnimation();
                     chirp.stop();
                 } else {
                     Log.e("ChirpError: ", "Decode failed");
@@ -173,7 +197,8 @@ public class FoodCouponsFragment extends Fragment {
             public void run() {
                 TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
                 textView.setText(payload);
-                ripple.pauseAnimation();
+                statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeemed));
+                statusCoupon1.setEnabled(false);
             }
         });
     }
