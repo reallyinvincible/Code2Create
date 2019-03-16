@@ -1,6 +1,7 @@
 package com.exuberant.code2create.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,8 @@ import static com.exuberant.code2create.interfaces.UtilsInterface.transformStrin
 
 public class LoginActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
+
     FirebaseDatabase mDatabase;
     DatabaseReference mUserReference;
     DatabaseReference mAgendaReference;
@@ -46,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initializeView();
+
+        sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+
         loginButton.setOnClickListener(view -> {
 //            mAgendaReference.setValue(model);
 //            mUserReference.setValue(userModel);
@@ -54,9 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
                 String securedPass = get_SHA_512_password(password, SHA_SALT);
-//                Toast.makeText(LoginActivity.this, transformString(email), Toast.LENGTH_SHORT).show();
-                checkUser(transformString(email), securedPass);
-//                    launchHome();
+                checkUser(email, securedPass);
             } else {
                 showErrorSnackbar("Email or password missing");
             }
@@ -82,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
         /*User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
         User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
         User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
-        mAgendaReference.setValue(model);
         mUserReference.child(transformString(user1.getEmail())).setValue(user1);
         mUserReference.child(transformString(user2.getEmail())).setValue(user2);
         mUserReference.child(transformString(user3.getEmail())).setValue(user3);*/
@@ -96,18 +99,18 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
-//        mAllUsersReference = mDatabase.getReference().child("users").child("userList");
     }
 
     void checkUser(String email, String password) {
+        String transformedEmail = transformString(email);
         mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(email)) {
-                    User user = dataSnapshot.child(email).getValue(User.class);
-//                    int a = 10;
+                if (dataSnapshot.hasChild(transformedEmail)) {
+                    User user = dataSnapshot.child(transformedEmail).getValue(User.class);
 
                     if (password.equals(user.getPassword())) {
+                        saveUserInfo(email, user.getWifiCoupon());
                         showConfirmationSnackbar("Logging you in!");
                     } else {
                         showErrorSnackbar("Incorrect Password!");
@@ -135,6 +138,13 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    void saveUserInfo(String email, String wifiCoupon) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("email", email);
+        editor.putString("transformedEmail", transformString(email));
+        editor.putString("wifiCoupon", wifiCoupon);
+        editor.apply();
+    }
 
     void launchHome() {
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
