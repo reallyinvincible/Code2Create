@@ -2,16 +2,13 @@ package com.exuberant.code2create.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.models.AgendaModel;
 import com.exuberant.code2create.models.User;
-import com.exuberant.code2create.models.UserModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,7 +16,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -34,7 +30,6 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference mUserReference;
     DatabaseReference mAgendaReference;
-    DatabaseReference mAllUsersReference;
 
     private final static String SHA_SALT = "ACM_Rocks";
 
@@ -43,8 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 
     List<Agenda> agendaList;
     AgendaModel model;
-    List<User> userList;
-    UserModel userModel;
 
     ConstraintLayout constraintLayout;
 
@@ -53,22 +46,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initializeView();
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAgendaReference.setValue(model);
-                mUserReference.setValue(userModel);
+        loginButton.setOnClickListener(view -> {
+//            mAgendaReference.setValue(model);
+//            mUserReference.setValue(userModel);
 
-                if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
-                    String email = emailET.getText().toString();
-                    String password = passwordET.getText().toString();
-                    String securedPass = get_SHA_512_password(password, SHA_SALT);
-                    Toast.makeText(LoginActivity.this, transformString(email), Toast.LENGTH_SHORT).show();
-                    checkUser(email, securedPass);
-                    launchHome();
-                } else {
-                    showSnackbar("Email or password missing");
-                }
+            if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
+                String email = emailET.getText().toString();
+                String password = passwordET.getText().toString();
+                String securedPass = get_SHA_512_password(password, SHA_SALT);
+//                Toast.makeText(LoginActivity.this, transformString(email), Toast.LENGTH_SHORT).show();
+                checkUser(transformString(email), securedPass);
+//                    launchHome();
+            } else {
+                showErrorSnackbar("Email or password missing");
             }
         });
 
@@ -85,19 +75,17 @@ public class LoginActivity extends AppCompatActivity {
         agendaList.add(model4);
         agendaList.add(model5);
         agendaList.add(model6);
-        model = new AgendaModel(agendaList);*/
+        model = new AgendaModel(agendaList);
+        mAgendaReference.setValue(model);*/
 
 
-        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
+        /*User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
         User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
         User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
-        userList = new ArrayList<>();
-        userList.add(user1);
-        userList.add(user2);
-        userList.add(user3);
-        userModel = new UserModel(userList);
         mAgendaReference.setValue(model);
-        mUserReference.setValue(userModel);
+        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
+        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
+        mUserReference.child(transformString(user3.getEmail())).setValue(user3);*/
     }
 
     void initializeView() {
@@ -108,14 +96,35 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
-        mAllUsersReference = mDatabase.getReference().child("users").child("userList");
+//        mAllUsersReference = mDatabase.getReference().child("users").child("userList");
     }
 
     void checkUser(String email, String password) {
-        mAllUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(email)) {
+                    User user = dataSnapshot.child(email).getValue(User.class);
+//                    int a = 10;
 
+                    if (password.equals(user.getPassword())) {
+                        showConfirmationSnackbar("Logging you in!");
+                    } else {
+                        showErrorSnackbar("Incorrect Password!");
+                    }
+                } else {
+                    showErrorSnackbar("User not registered!!");
+                }
+
+                /*List<User> userList = new ArrayList<>();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    userList.add(dataSnapshot1.getValue(User.class));
+                }
+                int a = 10;
+                if (userList.contains(email)) {
+                    User user = dataSnapshot.child(email).getValue(User.class);
+                    int b = 0;
+                }*/
             }
 
             @Override
@@ -131,9 +140,21 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
     }
 
-    void showSnackbar(String message) {
+    void showConfirmationSnackbar(String message) {
         Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundResource(R.color.colorAccent);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                launchHome();
+            }
+        });
+        snackbar.show();
+    }
+
+    void showErrorSnackbar(String message) {
+        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
         snackbar.show();
     }
 }
