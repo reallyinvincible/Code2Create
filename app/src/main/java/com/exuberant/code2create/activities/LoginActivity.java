@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     String securedPass = get_SHA_512_password(password, SHA_SALT);
                     Toast.makeText(LoginActivity.this, transformString(email), Toast.LENGTH_SHORT).show();
                     checkUser(email, securedPass);
-//                    launchHome();
+                    launchHome();
                 } else {
                     showSnackbar("Email or password missing");
                 }

@@ -239,4 +239,12 @@ public class FoodCouponsFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    public static AdminBypassInterface getAdminBypassInterface() {
+        return adminBypassInterface;
+    }
+
+    public static void setAdminBypassInterface(AdminBypassInterface adminBypassInterface) {
+        FoodCouponsFragment.adminBypassInterface = adminBypassInterface;
+    }
 }

@@ -6,11 +6,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class UtilsInterface {
 
-    static String transformString(String string) {
+    public static String transformString(String string) {
         return string.replaceAll("[^a-zA-Z0-9_-]", "_");
     }
 
-    static String get_SHA_512_password(String password_to_hash, String salt) {
+    public static String get_SHA_512_password(String password_to_hash, String salt) {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
