@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public interface UtilsInterface {
+public class UtilsInterface {
 
     static String transformString(String string) {
         return string.replaceAll("[^a-zA-Z0-9_-]", "_");
