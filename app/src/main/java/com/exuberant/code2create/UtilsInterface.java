@@ -1,8 +1,12 @@
-package com.exuberant.code2create.interfaces;
+package com.exuberant.code2create;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class UtilsInterface {
 
@@ -25,6 +29,24 @@ public class UtilsInterface {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+
+    public static Date getDateObject(String dateString, String timeString){
+        String completeDate = dateString + " " + timeString;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
+        try {
+            Date date = simpleDateFormat.parse(completeDate);
+            int a = 10;
+            return date;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static int compareDates(Date date){
+        Date currentDate = Calendar.getInstance().getTime();
+        return currentDate.compareTo(date);
     }
 
 }

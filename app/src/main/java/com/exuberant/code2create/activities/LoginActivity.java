@@ -5,8 +5,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.models.AgendaModel;
 import com.exuberant.code2create.models.User;
@@ -17,14 +19,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import static com.exuberant.code2create.interfaces.UtilsInterface.get_SHA_512_password;
-import static com.exuberant.code2create.interfaces.UtilsInterface.transformString;
+import static com.exuberant.code2create.UtilsInterface.get_SHA_512_password;
+import static com.exuberant.code2create.UtilsInterface.transformString;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -89,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         mUserReference.child(transformString(user1.getEmail())).setValue(user1);
         mUserReference.child(transformString(user2.getEmail())).setValue(user2);
         mUserReference.child(transformString(user3.getEmail())).setValue(user3);*/
+
     }
 
     void initializeView() {
@@ -100,6 +105,7 @@ public class LoginActivity extends AppCompatActivity {
         mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
     }
+
 
     void checkUser(String email, String password) {
         String transformedEmail = transformString(email);
