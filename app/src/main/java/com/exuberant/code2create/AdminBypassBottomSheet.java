@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.exuberant.code2create.fragments.FoodCouponsFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,13 +28,10 @@ public class AdminBypassBottomSheet extends BottomSheetDialogFragment {
         bypassString = view.findViewById(R.id.et_admin_string);
         adminSecretButton = view.findViewById(R.id.tv_admin_bypass_label);
 
-        adminSecretButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String bypass = bypassPassword.getText().toString();
-                if (bypass.equals(pass)){
-                    FoodCouponsFragment.getAdminBypassInterface().bypassScan(bypassString.getText().toString());
-                }
+        adminSecretButton.setOnClickListener(view1 -> {
+            String bypass = bypassPassword.getText().toString();
+            if (bypass.equals(pass)) {
+                FoodCouponsFragment.getAdminBypassInterface().bypassScan(bypassString.getText().toString());
             }
         });
 

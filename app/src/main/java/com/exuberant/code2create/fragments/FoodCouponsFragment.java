@@ -2,6 +2,7 @@ package com.exuberant.code2create.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,8 @@ import com.exuberant.code2create.R;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.Scannable;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -56,11 +59,21 @@ public class FoodCouponsFragment extends Fragment {
 
     Scannable scannable1;
 
+    SharedPreferences sharedPreferences;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mScannablesReference;
+
+    private String email;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_coupons, container, false);
         context = this.getContext();
+        initialiseViews(view);
+
+        sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        email = sharedPreferences.getString("email", null);
 
         //---------------------Initialise Chirp------------------------------
         chirp = new ChirpConnect(context, CHIRP_APP_KEY, CHIRP_APP_SECRET);
@@ -72,8 +85,32 @@ public class FoodCouponsFragment extends Fragment {
             Log.v(TAG, "SDK service started!");
         }
 
+        adminBypassInterface = new AdminBypassInterface() {
+            @Override
+            public void bypassScan(String bypassedKey) {
+                //TODO: Process the received key
+                bottomSheetDialogFragment.dismiss();
+            }
+        };
 
-        //------------------Initialise all views-----------------------------
+        somethingWrong.setOnClickListener(view1 -> {
+            bottomSheetDialogFragment = new AdminBypassBottomSheet();
+            bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "AdminBypass");
+        });
+
+        //------------Scannable testing-------------
+        scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 AM", "2:00 AM", "food");
+
+        titleCoupon1.setText(scannable1.getScannableTitle());
+        timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
+        statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
+        statusCoupon1.setOnClickListener(view12 -> listen());
+
+
+        return view;
+    }
+
+    private void initialiseViews(View view) {
         ripple = view.findViewById(R.id.lav_ripple);
 
         titleCoupon1 = view.findViewById(R.id.tv_title_coupon1);
@@ -90,46 +127,10 @@ public class FoodCouponsFragment extends Fragment {
         iconCoupon3 = view.findViewById(R.id.iv_icon_coupon3);
 
         somethingWrong = view.findViewById(R.id.tv_something_wrong);
-
         btnAudio = view.findViewById(R.id.btn_audio);
-        btnAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listen();
-            }
-        });
 
-        adminBypassInterface = new AdminBypassInterface() {
-            @Override
-            public void bypassScan(String bypassedKey) {
-                //TODO: Process the received key
-                bottomSheetDialogFragment.dismiss();
-            }
-        };
-
-        somethingWrong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetDialogFragment = new AdminBypassBottomSheet();
-                bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "AdminBypass");
-            }
-        });
-
-        //------------Scannable testing-------------
-        scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 AM", "2:00 AM", "food");
-
-        titleCoupon1.setText(scannable1.getScannableTitle());
-        timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
-        statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
-        statusCoupon1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listen();
-            }
-        });
-
-
-        return view;
+        mDatabase = FirebaseDatabase.getInstance();
+        mScannablesReference = mDatabase.getReference().child("sannables");
     }
 
     @Override
@@ -197,6 +198,7 @@ public class FoodCouponsFragment extends Fragment {
                         updatePayload(identifier);
                     }
                     ripple.pauseAnimation();
+                    ripple.setProgress(0);
                     chirp.stop();
                 } else {
                     Log.e("ChirpError: ", "Decode failed");
@@ -212,14 +214,11 @@ public class FoodCouponsFragment extends Fragment {
     }
 
     private void updatePayload(final String payload) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
-                textView.setText(payload);
-                statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeemed));
-                statusCoupon1.setEnabled(false);
-            }
+        getActivity().runOnUiThread(() -> {
+            TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
+            textView.setText(payload);
+            statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeemed));
+            statusCoupon1.setEnabled(false);
         });
     }
 
