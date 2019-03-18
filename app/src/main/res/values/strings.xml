@@ -29,9 +29,12 @@
     <string name="clear_all_your_doubts_here">Clear all your doubts here</string>
 
     <string name="something_wrong"><u>Something Wrong?</u></string>
+    <string name="redeem">REDEEM</string>
+    <string name="redeemed">REDEEMED</string>
 
-    <style name="redeem">REDEEM</style>
-
-    <style name="redeemed">REDEEMED</style>
+    <string name="shared_prefs_name">UserInfo</string>
+    <string name="shared_prefs_email">email</string>
+    <string name="shared_prefs_transformed_email">transformedEmail</string>
+    <string name="shared_prefs_wifi_coupon">wifiCoupon</string>
 
 </resources>

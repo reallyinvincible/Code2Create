@@ -4,6 +4,9 @@ import java.util.List;
 
 public class UserModel {
 
+    public UserModel() {
+    }
+
     List<User> userList;
 
     public UserModel(List<User> userList) {

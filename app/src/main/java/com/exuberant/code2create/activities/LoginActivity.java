@@ -5,13 +5,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.exuberant.code2create.R;
-import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.models.AgendaModel;
+import com.exuberant.code2create.models.CouponsUser;
+import com.exuberant.code2create.models.Scannable;
+import com.exuberant.code2create.models.ScannableModel;
 import com.exuberant.code2create.models.User;
+import com.exuberant.code2create.models.UserModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -19,8 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import static com.exuberant.code2create.UtilsInterface.get_SHA_512_password;
 import static com.exuberant.code2create.UtilsInterface.transformString;
 
+
 public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseDatabase mDatabase;
     DatabaseReference mUserReference;
     DatabaseReference mAgendaReference;
+    DatabaseReference mScannablesReference;
 
     private final static String SHA_SALT = "ACM_Rocks";
 
@@ -54,7 +57,10 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         initializeView();
 
-        sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_name), MODE_PRIVATE);
+        if (sharedPreferences.contains(getString(R.string.shared_prefs_email))) {
+            launchHome();
+        }
 
         loginButton.setOnClickListener(view -> {
 //            mAgendaReference.setValue(model);
@@ -94,6 +100,26 @@ public class LoginActivity extends AppCompatActivity {
         mUserReference.child(transformString(user2.getEmail())).setValue(user2);
         mUserReference.child(transformString(user3.getEmail())).setValue(user3);*/
 
+        Scannable scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 PM", "3:00 PM", "food", "22-MAR-2019");
+        Scannable scannable2 = new Scannable("Snacks", "s1", "snacks1", "4:00 PM", "5:00 PM", "food", "23-MAR-2019");
+        Scannable scannable3 = new Scannable("Dinner", "d1", "dinner1", "9:30 PM", "11:00 PM", "food", "22-MAR-2019");
+        List<Scannable> scannableList = new ArrayList<>();
+        scannableList.add(scannable1);
+        scannableList.add(scannable2);
+        scannableList.add(scannable3);
+        mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
+
+        List<String> usersList = new ArrayList<>();
+        usersList.add("tushar@mail");
+        usersList.add("sparsh@gmail.com");
+        CouponsUser couponsUser = new CouponsUser(usersList);
+
+        List<String> usersList1 = new ArrayList<>();
+        usersList1.add("abc@yahoomail.com");
+        CouponsUser couponsUser1 = new CouponsUser(usersList1);
+        mScannablesReference.child("events").child(scannable1.getScannableValue()).setValue(couponsUser);
+        mScannablesReference.child("events").child(scannable2.getScannableValue()).setValue(couponsUser1);
+
     }
 
     void initializeView() {
@@ -104,8 +130,8 @@ public class LoginActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
+        mScannablesReference = mDatabase.getReference().child("scannables");
     }
-
 
     void checkUser(String email, String password) {
         String transformedEmail = transformString(email);
@@ -124,6 +150,9 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     showErrorSnackbar("User not registered!!");
                 }
+
+                UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                List<User> userList = userModel.getUserList();
 
                 /*List<User> userList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
@@ -146,9 +175,9 @@ public class LoginActivity extends AppCompatActivity {
 
     void saveUserInfo(String email, String wifiCoupon) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("email", email);
-        editor.putString("transformedEmail", transformString(email));
-        editor.putString("wifiCoupon", wifiCoupon);
+        editor.putString(getString(R.string.shared_prefs_email), email);
+        editor.putString(getString(R.string.shared_prefs_transformed_email), transformString(email));
+        editor.putString(getString(R.string.shared_prefs_wifi_coupon), wifiCoupon);
         editor.apply();
     }
 
@@ -163,6 +192,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
                 launchHome();
+                finish();
             }
         });
         snackbar.show();

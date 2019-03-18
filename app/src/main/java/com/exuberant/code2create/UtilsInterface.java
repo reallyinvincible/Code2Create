@@ -35,9 +35,7 @@ public class UtilsInterface {
         String completeDate = dateString + " " + timeString;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MMM-yyyy hh:mm a");
         try {
-            Date date = simpleDateFormat.parse(completeDate);
-            int a = 10;
-            return date;
+            return simpleDateFormat.parse(completeDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }

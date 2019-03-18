@@ -18,13 +18,20 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.exuberant.code2create.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
+import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
+import com.exuberant.code2create.models.ScannableModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -35,6 +42,9 @@ import androidx.fragment.app.Fragment;
 import io.chirp.connect.ChirpConnect;
 import io.chirp.connect.interfaces.ConnectEventListener;
 import io.chirp.connect.models.ChirpError;
+
+import static com.exuberant.code2create.UtilsInterface.compareDates;
+import static com.exuberant.code2create.UtilsInterface.getDateObject;
 
 public class FoodCouponsFragment extends Fragment {
 
@@ -57,11 +67,12 @@ public class FoodCouponsFragment extends Fragment {
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
     private BottomSheetDialogFragment bottomSheetDialogFragment;
 
-    Scannable scannable1;
+    Scannable scannable1, scannable2, scannable3;
 
     SharedPreferences sharedPreferences;
     FirebaseDatabase mDatabase;
     DatabaseReference mScannablesReference;
+    DatabaseReference mCouponsListReference;
 
     private String email;
 
@@ -72,7 +83,7 @@ public class FoodCouponsFragment extends Fragment {
         context = this.getContext();
         initialiseViews(view);
 
-        sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_prefs_name), Context.MODE_PRIVATE);
         email = sharedPreferences.getString("email", null);
 
         //---------------------Initialise Chirp------------------------------
@@ -98,16 +109,100 @@ public class FoodCouponsFragment extends Fragment {
             bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "AdminBypass");
         });
 
-        //------------Scannable testing-------------
+        /*//------------Scannable testing-------------
         scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 AM", "2:00 AM", "food");
 
         titleCoupon1.setText(scannable1.getScannableTitle());
         timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
         statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
-        statusCoupon1.setOnClickListener(view12 -> listen());
+        statusCoupon1.setOnClickListener(view12 -> listen());*/
+
+        mCouponsListReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                CouponsUserModel couponsUserModel = dataSnapshot.getValue(CouponsUserModel.class);
+//                List<CouponsUser> couponsUsers = couponsUserModel.getCouponsUserModeList();
+                CouponsUser couponsUser = dataSnapshot.getValue(CouponsUser.class);
+                List<String> users = couponsUser.getCouponsUserList();
+                int a = 10;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mScannablesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ScannableModel scannableModel = dataSnapshot.getValue(ScannableModel.class);
+                List<Scannable> scannableList = scannableModel.getScannableList();
+
+                scannable1 = scannableList.get(0);
+                scannable2 = scannableList.get(1);
+                scannable3 = scannableList.get(2);
+
+
+                titleCoupon1.setText(scannableList.get(0).getScannableTitle());
+                timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
+
+                titleCoupon2.setText(scannableList.get(1).getScannableTitle());
+                timeCoupon2.setText(String.format("%s - %s", scannable2.getScannableStartTime(), scannable2.getScannableEndTime()));
+
+                titleCoupon3.setText(scannableList.get(2).getScannableTitle());
+                timeCoupon3.setText(String.format("%s - %s", scannable3.getScannableStartTime(), scannable3.getScannableEndTime()));
+
+                Date date11 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableStartTime());
+                Date date12 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableEndTime());
+                Date date21 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableStartTime());
+                Date date22 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableEndTime());
+                Date date31 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableStartTime());
+                Date date32 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableEndTime());
+
+                if (compareDates(date11) == 1 && compareDates(date12) == -1) {
+                    setRedeemState(statusCoupon1);
+                } else {
+                    setInvisibleState(statusCoupon1);
+                }
+
+                if (compareDates(date21) == 1 && compareDates(date22) == -1) {
+                    setRedeemState(statusCoupon2);
+                } else {
+                    setInvisibleState(statusCoupon2);
+                }
+
+                if (compareDates(date31) == 1 && compareDates(date32) == -1) {
+                    setRedeemState(statusCoupon3);
+                } else {
+                    setInvisibleState(statusCoupon3);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
 
 
         return view;
+    }
+
+    void setRedeemState(ImageView imageView) {
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
+        imageView.setOnClickListener(view -> listen(imageView));
+    }
+
+    void setInvisibleState(ImageView imageView) {
+        imageView.setVisibility(View.INVISIBLE);
+        imageView.setEnabled(false);
     }
 
     private void initialiseViews(View view) {
@@ -130,7 +225,8 @@ public class FoodCouponsFragment extends Fragment {
         btnAudio = view.findViewById(R.id.btn_audio);
 
         mDatabase = FirebaseDatabase.getInstance();
-        mScannablesReference = mDatabase.getReference().child("sannables");
+        mScannablesReference = mDatabase.getReference().child("scannables").child("list");
+        mCouponsListReference = mDatabase.getReference().child("scannables").child("events");
     }
 
     @Override
@@ -165,7 +261,7 @@ public class FoodCouponsFragment extends Fragment {
         }
     }
 
-    private void listen() {
+    private void listen(ImageView imageView) {
         ripple.playAnimation();
         chirp.start();
         ConnectEventListener chirpEventListener = new ConnectEventListener() {
@@ -192,10 +288,10 @@ public class FoodCouponsFragment extends Fragment {
                     String identifier = new String(data);
                     Log.v("ChirpSDK: ", "Received " + identifier);
 
-                    if (!identifier.equals(scannable1.getScannableKey())) {
+                    if (!identifier.equals(scannable2.getScannableKey())) {
                         Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
                     } else {
-                        updatePayload(identifier);
+                        updatePayload(identifier, imageView);
                     }
                     ripple.pauseAnimation();
                     ripple.setProgress(0);
@@ -213,12 +309,12 @@ public class FoodCouponsFragment extends Fragment {
         chirp.setListener(chirpEventListener);
     }
 
-    private void updatePayload(final String payload) {
+    private void updatePayload(final String payload, ImageView imageView) {
         getActivity().runOnUiThread(() -> {
             TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
             textView.setText(payload);
-            statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeemed));
-            statusCoupon1.setEnabled(false);
+            imageView.setImageDrawable(getResources().getDrawable(R.drawable.redeemed));
+            imageView.setEnabled(false);
         });
     }
 

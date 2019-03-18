@@ -7,17 +7,19 @@ public class Scannable {
     String scannableStartTime;
     String scannableEndTime;
     String scannableType;
+    String scannableDate;
 
-    public Scannable(String scannableTitle, String scannableKey, String scannableValue, String scannableStartTime, String scannableEndTime, String scannableType) {
+    public Scannable() {
+    }
+
+    public Scannable(String scannableTitle, String scannableKey, String scannableValue, String scannableStartTime, String scannableEndTime, String scannableType, String scannableDate) {
         this.scannableTitle = scannableTitle;
         this.scannableKey = scannableKey;
         this.scannableValue = scannableValue;
         this.scannableStartTime = scannableStartTime;
         this.scannableEndTime = scannableEndTime;
         this.scannableType = scannableType;
-    }
-
-    public Scannable() {
+        this.scannableDate = scannableDate;
     }
 
     public String getScannableTitle() {
@@ -66,5 +68,13 @@ public class Scannable {
 
     public void setScannableType(String scannableType) {
         this.scannableType = scannableType;
+    }
+
+    public String getScannableDate() {
+        return scannableDate;
+    }
+
+    public void setScannableDate(String scannableDate) {
+        this.scannableDate = scannableDate;
     }
 }

@@ -1,13 +1,18 @@
 package com.exuberant.code2create.activities;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
 import com.exuberant.code2create.fragments.AlertFragment;
@@ -39,13 +44,14 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialButton navigationButton, bookmarkButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
     BottomSheetBehavior bottomSheetBehavior;
-    private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer;
+    private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer, logoutContainer;
     private ImageView aboutImageView, agendaImageView, faqImageView, couponsImageView, prizesImageView, sponsorsImageView;
     private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_home);
 
         initializeViews();
@@ -133,6 +139,8 @@ public class HomeActivity extends AppCompatActivity {
         fragmentSwitchInterface.switchToAgenda();
 
         requestMicrophonePermissions();
+
+        Log.v("somedate", String.valueOf(UtilsInterface.compareDates(UtilsInterface.getDateObject("19-MAR-2019", "9:35 AM"))));
     }
 
     void switchFragment(Fragment fragment) {
@@ -173,6 +181,7 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsContainer = findViewById(R.id.ll_sponsors_container);
         sponsorsImageView = findViewById(R.id.iv_sponsors);
         sponsorsTextView = findViewById(R.id.tv_sponsors);
+        logoutContainer = findViewById(R.id.ll_logout_container);
     }
 
     void setupBottomAppBarButtonListeners() {
@@ -212,75 +221,65 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     void setupMenuListeners() {
-        aboutContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                aboutContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about_tint));
-                aboutTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToAbout();
-            }
+        aboutContainer.setOnClickListener(view -> {
+            clearAllTints();
+            aboutContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about_tint));
+            aboutTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToAbout();
         });
 
-        agendaContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
-                agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToAgenda();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        agendaContainer.setOnClickListener(view -> {
+            clearAllTints();
+            agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
+            agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToAgenda();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        faqContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                faqContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
-                faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToFaq();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        faqContainer.setOnClickListener(view -> {
+            clearAllTints();
+            faqContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
+            faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToFaq();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        couponsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                couponsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
-                couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToCoupons();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        couponsContainer.setOnClickListener(view -> {
+            clearAllTints();
+            couponsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
+            couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToCoupons();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        prizesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                prizesContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
-                prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToPrizes();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        prizesContainer.setOnClickListener(view -> {
+            clearAllTints();
+            prizesContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
+            prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToPrizes();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        sponsorsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                sponsorsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
-                sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToSponsors();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        sponsorsContainer.setOnClickListener(view -> {
+            clearAllTints();
+            sponsorsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
+            sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToSponsors();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
+
+        logoutContainer.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         });
     }
 
