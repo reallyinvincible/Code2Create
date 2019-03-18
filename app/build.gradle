@@ -29,6 +29,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'com.google.firebase:firebase-database:16.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.7'
+    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    implementation 'com.google.firebase:firebase-config:16.3.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.airbnb.android:lottie:3.0.0-beta2'
     implementation "io.chirp:chirpsdk:3.6.1"

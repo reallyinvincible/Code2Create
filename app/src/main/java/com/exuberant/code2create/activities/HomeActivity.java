@@ -126,7 +126,11 @@ public class HomeActivity extends AppCompatActivity {
 
         setupMenuListeners();
 
-        HomeActivity.getFragmentSwitchInterface().switchToError();
+        clearAllTints();
+        agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+        agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
+        agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        fragmentSwitchInterface.switchToAgenda();
 
         requestMicrophonePermissions();
     }
