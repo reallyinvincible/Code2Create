@@ -13,7 +13,6 @@ import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
 import com.exuberant.code2create.models.User;
-import com.exuberant.code2create.models.UserModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference mUserReference;
     DatabaseReference mAgendaReference;
     DatabaseReference mScannablesReference;
+    DatabaseReference mAttendanceReference;
 
     private final static String SHA_SALT = "ACM_Rocks";
 
@@ -63,9 +63,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         loginButton.setOnClickListener(view -> {
-//            mAgendaReference.setValue(model);
-//            mUserReference.setValue(userModel);
-
             if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
@@ -75,51 +72,6 @@ public class LoginActivity extends AppCompatActivity {
                 showErrorSnackbar("Email or password missing");
             }
         });
-
-        /*Agenda model1 = new Agenda("Registration", "6:00 PM", "8:00 PM", "22-MAR-2019", "reg");
-        Agenda model2 = new Agenda("Opening Ceremony", "8:00 PM", "9:00 PM", "22-MAR-2019", "talk");
-        Agenda model3 = new Agenda("Hack Starts", "9:00 PM", "", "22-MAR-2019", "event");
-        Agenda model4 = new Agenda("Dinner", "10:30 PM", "11:30 PM", "22-MAR-2019", "food");
-        Agenda model5 = new Agenda("Intruder", "11:30 PM", "11:59 PM", "22-MAR-2019", "event");
-        Agenda model6 = new Agenda("Night Snacks", "1:30 AM", "2:00 AM", "23-MAR-2019", "food");
-        agendaList = new ArrayList<>();
-        agendaList.add(model1);
-        agendaList.add(model2);
-        agendaList.add(model3);
-        agendaList.add(model4);
-        agendaList.add(model5);
-        agendaList.add(model6);
-        model = new AgendaModel(agendaList);
-        mAgendaReference.setValue(model);*/
-
-
-        /*User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
-        User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
-        User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
-        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
-        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
-        mUserReference.child(transformString(user3.getEmail())).setValue(user3);*/
-
-        Scannable scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 PM", "3:00 PM", "food", "22-MAR-2019");
-        Scannable scannable2 = new Scannable("Snacks", "s1", "snacks1", "4:00 PM", "5:00 PM", "food", "23-MAR-2019");
-        Scannable scannable3 = new Scannable("Dinner", "d1", "dinner1", "9:30 PM", "11:00 PM", "food", "22-MAR-2019");
-        List<Scannable> scannableList = new ArrayList<>();
-        scannableList.add(scannable1);
-        scannableList.add(scannable2);
-        scannableList.add(scannable3);
-        mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
-
-        List<String> usersList = new ArrayList<>();
-        usersList.add("tushar@mail");
-        usersList.add("sparsh@gmail.com");
-        CouponsUser couponsUser = new CouponsUser(usersList);
-
-        List<String> usersList1 = new ArrayList<>();
-        usersList1.add("abc@yahoomail.com");
-        CouponsUser couponsUser1 = new CouponsUser(usersList1);
-        mScannablesReference.child("events").child(scannable1.getScannableValue()).setValue(couponsUser);
-        mScannablesReference.child("events").child(scannable2.getScannableValue()).setValue(couponsUser1);
-
     }
 
     void initializeView() {
@@ -131,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
         mScannablesReference = mDatabase.getReference().child("scannables");
+        mAttendanceReference = mScannablesReference.child("attendance");
     }
 
     void checkUser(String email, String password) {
@@ -150,19 +103,6 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     showErrorSnackbar("User not registered!!");
                 }
-
-                UserModel userModel = dataSnapshot.getValue(UserModel.class);
-                List<User> userList = userModel.getUserList();
-
-                /*List<User> userList = new ArrayList<>();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    userList.add(dataSnapshot1.getValue(User.class));
-                }
-                int a = 10;
-                if (userList.contains(email)) {
-                    User user = dataSnapshot.child(email).getValue(User.class);
-                    int b = 0;
-                }*/
             }
 
             @Override
@@ -183,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void launchHome() {
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        finishAfterTransition();
     }
 
     void showConfirmationSnackbar(String message) {
@@ -202,5 +143,52 @@ public class LoginActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
         snackbar.show();
+    }
+
+    void addDummyValue(){
+        Agenda model1 = new Agenda("Registration", "6:00 PM", "8:00 PM", "22-MAR-2019", "reg");
+        Agenda model2 = new Agenda("Opening Ceremony", "8:00 PM", "9:00 PM", "22-MAR-2019", "talk");
+        Agenda model3 = new Agenda("Hack Starts", "9:00 PM", "", "22-MAR-2019", "event");
+        Agenda model4 = new Agenda("Dinner", "10:30 PM", "11:30 PM", "22-MAR-2019", "food");
+        Agenda model5 = new Agenda("Intruder", "11:30 PM", "11:59 PM", "22-MAR-2019", "event");
+        Agenda model6 = new Agenda("Night Snacks", "1:30 AM", "2:00 AM", "23-MAR-2019", "food");
+        agendaList = new ArrayList<>();
+        agendaList.add(model1);
+        agendaList.add(model2);
+        agendaList.add(model3);
+        agendaList.add(model4);
+        agendaList.add(model5);
+        agendaList.add(model6);
+        model = new AgendaModel(agendaList);
+        mAgendaReference.setValue(model);
+
+
+        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
+        User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
+        User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
+        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
+        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
+        mUserReference.child(transformString(user3.getEmail())).setValue(user3);
+
+        Scannable scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 PM", "3:00 PM", "food", "22-MAR-2019");
+        Scannable scannable2 = new Scannable("Snacks", "s1", "snacks1", "4:00 PM", "5:00 PM", "food", "23-MAR-2019");
+        Scannable scannable3 = new Scannable("Dinner", "d1", "dinner1", "9:30 PM", "11:00 PM", "food", "22-MAR-2019");
+        List<Scannable> scannableList = new ArrayList<>();
+        scannableList.add(scannable1);
+        scannableList.add(scannable2);
+        scannableList.add(scannable3);
+        mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
+
+        List<String> usersList = new ArrayList<>();
+        usersList.add("tushar@mail");
+        usersList.add("sparsh@gmail.com");
+        CouponsUser couponsUser = new CouponsUser(usersList);
+
+        List<String> usersList1 = new ArrayList<>();
+        usersList1.add("abc@yahoomail.com");
+        usersList1.add("bcd@g.com");
+        CouponsUser couponsUser1 = new CouponsUser(usersList1);
+        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
+        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
     }
 }

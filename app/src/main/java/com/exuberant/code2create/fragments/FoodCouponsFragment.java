@@ -17,10 +17,12 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.exuberant.code2create.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
+import com.exuberant.code2create.models.User;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -68,11 +71,13 @@ public class FoodCouponsFragment extends Fragment {
     private BottomSheetDialogFragment bottomSheetDialogFragment;
 
     Scannable scannable1, scannable2, scannable3;
+    List<String> userList1, userList2, userList3;
 
     SharedPreferences sharedPreferences;
     FirebaseDatabase mDatabase;
     DatabaseReference mScannablesReference;
     DatabaseReference mCouponsListReference;
+    DatabaseReference mAttendanceReference;
 
     private String email;
 
@@ -109,89 +114,19 @@ public class FoodCouponsFragment extends Fragment {
             bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "AdminBypass");
         });
 
-        /*//------------Scannable testing-------------
-        scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 AM", "2:00 AM", "food");
-
-        titleCoupon1.setText(scannable1.getScannableTitle());
-        timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
-        statusCoupon1.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
-        statusCoupon1.setOnClickListener(view12 -> listen());*/
-
-        mCouponsListReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                CouponsUserModel couponsUserModel = dataSnapshot.getValue(CouponsUserModel.class);
-//                List<CouponsUser> couponsUsers = couponsUserModel.getCouponsUserModeList();
-                CouponsUser couponsUser = dataSnapshot.getValue(CouponsUser.class);
-                List<String> users = couponsUser.getCouponsUserList();
-                int a = 10;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         mScannablesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ScannableModel scannableModel = dataSnapshot.getValue(ScannableModel.class);
                 List<Scannable> scannableList = scannableModel.getScannableList();
-
-                scannable1 = scannableList.get(0);
-                scannable2 = scannableList.get(1);
-                scannable3 = scannableList.get(2);
-
-
-                titleCoupon1.setText(scannableList.get(0).getScannableTitle());
-                timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
-
-                titleCoupon2.setText(scannableList.get(1).getScannableTitle());
-                timeCoupon2.setText(String.format("%s - %s", scannable2.getScannableStartTime(), scannable2.getScannableEndTime()));
-
-                titleCoupon3.setText(scannableList.get(2).getScannableTitle());
-                timeCoupon3.setText(String.format("%s - %s", scannable3.getScannableStartTime(), scannable3.getScannableEndTime()));
-
-                Date date11 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableStartTime());
-                Date date12 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableEndTime());
-                Date date21 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableStartTime());
-                Date date22 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableEndTime());
-                Date date31 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableStartTime());
-                Date date32 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableEndTime());
-
-                if (compareDates(date11) == 1 && compareDates(date12) == -1) {
-                    setRedeemState(statusCoupon1);
-                } else {
-                    setInvisibleState(statusCoupon1);
-                }
-
-                if (compareDates(date21) == 1 && compareDates(date22) == -1) {
-                    setRedeemState(statusCoupon2);
-                } else {
-                    setInvisibleState(statusCoupon2);
-                }
-
-                if (compareDates(date31) == 1 && compareDates(date32) == -1) {
-                    setRedeemState(statusCoupon3);
-                } else {
-                    setInvisibleState(statusCoupon3);
-                }
-
+                findAppropriateList(scannableList);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
-
-
-
-
-
-
-
         return view;
     }
 
@@ -226,6 +161,7 @@ public class FoodCouponsFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance();
         mScannablesReference = mDatabase.getReference().child("scannables").child("list");
+        mAttendanceReference = mDatabase.getReference().child("scannables").child("attendance");
         mCouponsListReference = mDatabase.getReference().child("scannables").child("events");
     }
 
@@ -342,4 +278,107 @@ public class FoodCouponsFragment extends Fragment {
     public static void setAdminBypassInterface(AdminBypassInterface adminBypassInterface) {
         FoodCouponsFragment.adminBypassInterface = adminBypassInterface;
     }
+
+    void processScannable(List<Scannable> scannableList){
+
+        scannable1 = scannableList.get(0);
+        scannable2 = scannableList.get(1);
+        scannable3 = scannableList.get(2);
+
+        mAttendanceReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int b = 10;
+                CouponsUser couponsUser = dataSnapshot.child(scannable1.getScannableValue()).getValue(CouponsUser.class);
+                if (couponsUser == null){
+                    userList1 = new ArrayList<>();
+                } else {
+                    userList1 = couponsUser.getCouponsUserList();
+                }
+                couponsUser = dataSnapshot.child(scannable2.getScannableValue()).getValue(CouponsUser.class);
+                if (couponsUser == null){
+                    userList2 = new ArrayList<>();
+                } else {
+                    userList2 = couponsUser.getCouponsUserList();
+                }
+                couponsUser = dataSnapshot.child(scannable3.getScannableValue()).getValue(CouponsUser.class);
+                if (couponsUser == null){
+                    userList3 = new ArrayList<>();
+                } else {
+                    userList3 = couponsUser.getCouponsUserList();
+                }
+                int a = 10;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        titleCoupon1.setText(scannableList.get(0).getScannableTitle());
+        timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
+
+        titleCoupon2.setText(scannableList.get(1).getScannableTitle());
+        timeCoupon2.setText(String.format("%s - %s", scannable2.getScannableStartTime(), scannable2.getScannableEndTime()));
+
+        titleCoupon3.setText(scannableList.get(2).getScannableTitle());
+        timeCoupon3.setText(String.format("%s - %s", scannable3.getScannableStartTime(), scannable3.getScannableEndTime()));
+
+        Date date11 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableStartTime());
+        Date date12 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableEndTime());
+        Date date21 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableStartTime());
+        Date date22 = getDateObject(scannable2.getScannableDate(), scannable2.getScannableEndTime());
+        Date date31 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableStartTime());
+        Date date32 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableEndTime());
+
+        if (compareDates(date11) == 1 && compareDates(date12) == -1) {
+            setRedeemState(statusCoupon1);
+        } else {
+            setInvisibleState(statusCoupon1);
+        }
+
+        if (compareDates(date21) == 1 && compareDates(date22) == -1) {
+            setRedeemState(statusCoupon2);
+        } else {
+            setInvisibleState(statusCoupon2);
+        }
+
+        if (compareDates(date31) == 1 && compareDates(date32) == -1) {
+            setRedeemState(statusCoupon3);
+        } else {
+            setInvisibleState(statusCoupon3);
+        }
+    }
+
+    void findAppropriateList(List<Scannable> scannableList){
+        int i = 0;
+        List<Scannable> selectedScannable = new ArrayList<>();
+        for(i = 0; i < scannableList.size(); i++){
+            Scannable scannable = scannableList.get(i);
+            Date date = getDateObject(scannable.getScannableDate(), scannable.getScannableEndTime());
+            if (compareDates(date) == -1){
+                break;
+            }
+        }
+
+        if (i == 0){
+            selectedScannable.add(scannableList.get(i));
+            selectedScannable.add(scannableList.get(i+1));
+            selectedScannable.add(scannableList.get(i+2));
+            processScannable(selectedScannable);
+        } else if (i == (scannableList.size() - 1)){
+            selectedScannable.add(scannableList.get(i-2));
+            selectedScannable.add(scannableList.get(i-1));
+            selectedScannable.add(scannableList.get(i));
+            processScannable(selectedScannable);
+        } else {
+            selectedScannable.add(scannableList.get(i-1));
+            selectedScannable.add(scannableList.get(i));
+            selectedScannable.add(scannableList.get(i+1));
+            processScannable(selectedScannable);
+        }
+
+    }
+
 }
