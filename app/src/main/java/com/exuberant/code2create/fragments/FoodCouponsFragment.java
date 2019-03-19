@@ -17,12 +17,10 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.exuberant.code2create.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
-import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
-import com.exuberant.code2create.models.User;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -130,12 +128,12 @@ public class FoodCouponsFragment extends Fragment {
         return view;
     }
 
-    void setRedeemState(ImageView imageView) {
+    private void setRedeemState(ImageView imageView) {
         imageView.setImageDrawable(getResources().getDrawable(R.drawable.redeem));
         imageView.setOnClickListener(view -> listen(imageView));
     }
 
-    void setInvisibleState(ImageView imageView) {
+    private void setInvisibleState(ImageView imageView) {
         imageView.setVisibility(View.INVISIBLE);
         imageView.setEnabled(false);
     }
