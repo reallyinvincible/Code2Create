@@ -41,7 +41,7 @@ import androidx.transition.Fade;
 public class HomeActivity extends AppCompatActivity {
 
     static FragmentSwitchInterface fragmentSwitchInterface;
-    private MaterialButton navigationButton, bookmarkButton, alertButton, closeButton;
+    private MaterialButton navigationButton, wifiButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
     BottomSheetBehavior bottomSheetBehavior;
     private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer, logoutContainer;
@@ -110,14 +110,14 @@ public class HomeActivity extends AppCompatActivity {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_accent));
                     navigationButton.setVisibility(View.VISIBLE);
                     alertButton.setVisibility(View.VISIBLE);
-                    bookmarkButton.setVisibility(View.VISIBLE);
+                    wifiButton.setVisibility(View.VISIBLE);
                     closeButton.setVisibility(View.GONE);
 
                 } else {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_primary));
                     navigationButton.setVisibility(View.GONE);
                     alertButton.setVisibility(View.GONE);
-                    bookmarkButton.setVisibility(View.GONE);
+                    wifiButton.setVisibility(View.GONE);
                     closeButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -157,7 +157,7 @@ public class HomeActivity extends AppCompatActivity {
     void initializeViews() {
         navigationButton = findViewById(R.id.btn_navigation);
         alertButton = findViewById(R.id.btn_alerts);
-        bookmarkButton = findViewById(R.id.btn_bookmarks);
+        wifiButton = findViewById(R.id.btn_wifi);
         bottomSheetLayout = findViewById(R.id.bottom_sheet);
         closeButton = findViewById(R.id.btn_close_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -208,11 +208,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+        wifiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearAllTints();
-                bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_filled));
+                wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
                 fragmentSwitchInterface.switchToBookmarks();
             }
         });
@@ -300,7 +300,7 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsContainer.setBackgroundResource(0);
         sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors));
         sponsorsTextView.setTextColor(getResources().getColor(R.color.textColor));
-        bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_outlined));
+        wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
         alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
     }
 

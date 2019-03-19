@@ -54,11 +54,11 @@
                 app:icon="@drawable/ic_alert_outlined"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/black"
-                app:layout_constraintBaseline_toBaselineOf="@+id/btn_bookmarks"
+                app:layout_constraintBaseline_toBaselineOf="@+id/btn_wifi"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_bookmarks"
+                android:id="@+id/btn_wifi"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton.Icon"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/ic_bookmark_outlined"
+                app:icon="@drawable/ic_wifi"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/black"
                 app:layout_constraintBottom_toBottomOf="parent"

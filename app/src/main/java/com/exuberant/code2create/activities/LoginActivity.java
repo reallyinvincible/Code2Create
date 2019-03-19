@@ -186,16 +186,16 @@ public class LoginActivity extends AppCompatActivity {
         scannableList.add(scannable6);
         mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
 
-//        List<String> usersList = new ArrayList<>();
-//        usersList.add("tushar@mail");
-//        usersList.add("sparsh@gmail.com");
-//        CouponsUser couponsUser = new CouponsUser(usersList);
-//
-//        List<String> usersList1 = new ArrayList<>();
-//        usersList1.add("abc@yahoomail.com");
-//        usersList1.add("bcd@g.com");
-//        CouponsUser couponsUser1 = new CouponsUser(usersList1);
-//        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
-//        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
+        List<String> usersList = new ArrayList<>();
+        usersList.add("tushar@mail");
+        usersList.add("sparsh@gmail.com");
+        CouponsUser couponsUser = new CouponsUser(usersList);
+
+        List<String> usersList1 = new ArrayList<>();
+        usersList1.add("abc@yahoomail.com");
+        usersList1.add("bcd@g.com");
+        CouponsUser couponsUser1 = new CouponsUser(usersList1);
+        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
+        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
     }
 }

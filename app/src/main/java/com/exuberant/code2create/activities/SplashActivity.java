@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
         Animation splash = AnimationUtils.loadAnimation(this, R.anim.splash_animation);
 
         iv.startAnimation(splash);
-        int SPLASH_TIME_OUT = 750;
+        int SPLASH_TIME_OUT = 500;
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
