@@ -11,4 +11,6 @@
     <color name="colorPrimaryLight">#ADADAD</color>
     <color name="colorTextLight">#7C7C7C</color>
     <color name="colorErrorSnackbar">#D93B38</color>
+
+    <color name="colorLine">#dfdfdf</color>
 </resources>

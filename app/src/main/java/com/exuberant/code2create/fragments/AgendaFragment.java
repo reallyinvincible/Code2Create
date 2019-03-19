@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.exuberant.code2create.AgendaAdapter;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.exuberant.code2create.adapters.AgendaAdapter;
+import com.exuberant.code2create.adapters.SkeletonAdapter;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.models.AgendaModel;
@@ -30,6 +33,7 @@ public class AgendaFragment extends Fragment {
     DatabaseReference agendaReference;
     List<Agenda> agendaList;
     RecyclerView agendaRecyclerView;
+    SkeletonScreen skeletonScreen;
 
     @Nullable
     @Override
@@ -37,6 +41,15 @@ public class AgendaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
         Date currentTime = Calendar.getInstance().getTime();
         agendaRecyclerView = view.findViewById(R.id.rv_agenda_recycler_view);
+        SkeletonAdapter skeletonAdapter = new SkeletonAdapter();
+        skeletonScreen = Skeleton.bind(agendaRecyclerView)
+                .adapter(skeletonAdapter)
+                .shimmer(true)
+                .angle(20)
+                .duration(1200)
+                .load(R.layout.skeleton_item_agenda)
+                .count(10)
+                .show();
         mDatabase = FirebaseDatabase.getInstance();
         agendaReference = mDatabase.getReference().child("agendas");
         fetchAgendaList();

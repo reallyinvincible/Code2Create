@@ -33,6 +33,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-config:16.4.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.airbnb.android:lottie:3.0.0-beta2'
+    implementation 'com.ethanhua:skeleton:1.1.2'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation "io.chirp:chirpsdk:3.6.1"
     implementation 'com.karumi:dexter:5.0.0'
 

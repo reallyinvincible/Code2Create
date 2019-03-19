@@ -1,4 +1,4 @@
-package com.exuberant.code2create;
+package com.exuberant.code2create.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.exuberant.code2create.R;
 import com.exuberant.code2create.models.Agenda;
 
 import java.util.List;
