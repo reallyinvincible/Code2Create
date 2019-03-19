@@ -39,7 +39,6 @@ public class AgendaFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_agenda, container, false);
-        Date currentTime = Calendar.getInstance().getTime();
         agendaRecyclerView = view.findViewById(R.id.rv_agenda_recycler_view);
         SkeletonAdapter skeletonAdapter = new SkeletonAdapter();
         skeletonScreen = Skeleton.bind(agendaRecyclerView)
