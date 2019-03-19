@@ -47,34 +47,36 @@ public class AdminBypassBottomSheet extends BottomSheetDialogFragment {
 
         adminSecretButton.setOnClickListener(view1 -> {
             String bypass = bypassPassword.getText().toString();
-            if (bypass.equals(PASS)) {
-                FoodCouponsFragment.getAdminBypassInterface().bypassScan(bypassString.getText().toString());
-            }
+            fetchConfig(bypass);
         });
 
         return view;
     }
 
-    void fetchConfig(){
+    void fetchConfig(String bypass){
         firebaseRemoteConfig.fetch(0)
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 firebaseRemoteConfig.activateFetched();
-                changeAdminPassword();
+                checkAdminPassword(bypass);
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
             firebaseRemoteConfig.activateFetched();
+            checkAdminPassword(bypass);
             e.printStackTrace();
             }
         });
 
     }
 
-    void changeAdminPassword(){
+    void checkAdminPassword(String bypass){
         PASS = firebaseRemoteConfig.getString("admin_bypass_password");
+        if (bypass.equals(PASS)) {
+            FoodCouponsFragment.getAdminBypassInterface().bypassScan(bypassString.getText().toString());
+        }
     }
 }
