@@ -146,49 +146,56 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void addDummyValue(){
-        Agenda model1 = new Agenda("Registration", "6:00 PM", "8:00 PM", "22-MAR-2019", "reg");
-        Agenda model2 = new Agenda("Opening Ceremony", "8:00 PM", "9:00 PM", "22-MAR-2019", "talk");
-        Agenda model3 = new Agenda("Hack Starts", "9:00 PM", "", "22-MAR-2019", "event");
-        Agenda model4 = new Agenda("Dinner", "10:30 PM", "11:30 PM", "22-MAR-2019", "food");
-        Agenda model5 = new Agenda("Intruder", "11:30 PM", "11:59 PM", "22-MAR-2019", "event");
-        Agenda model6 = new Agenda("Night Snacks", "1:30 AM", "2:00 AM", "23-MAR-2019", "food");
-        agendaList = new ArrayList<>();
-        agendaList.add(model1);
-        agendaList.add(model2);
-        agendaList.add(model3);
-        agendaList.add(model4);
-        agendaList.add(model5);
-        agendaList.add(model6);
-        model = new AgendaModel(agendaList);
-        mAgendaReference.setValue(model);
+//        Agenda model1 = new Agenda("Registration", "6:00 PM", "8:00 PM", "22-MAR-2019", "reg");
+//        Agenda model2 = new Agenda("Opening Ceremony", "8:00 PM", "9:00 PM", "22-MAR-2019", "talk");
+//        Agenda model3 = new Agenda("Hack Starts", "9:00 PM", "", "22-MAR-2019", "event");
+//        Agenda model4 = new Agenda("Dinner", "10:30 PM", "11:30 PM", "22-MAR-2019", "food");
+//        Agenda model5 = new Agenda("Intruder", "11:30 PM", "11:59 PM", "22-MAR-2019", "event");
+//        Agenda model6 = new Agenda("Night Snacks", "1:30 AM", "2:00 AM", "23-MAR-2019", "food");
+//        agendaList = new ArrayList<>();
+//        agendaList.add(model1);
+//        agendaList.add(model2);
+//        agendaList.add(model3);
+//        agendaList.add(model4);
+//        agendaList.add(model5);
+//        agendaList.add(model6);
+//        model = new AgendaModel(agendaList);
+//        mAgendaReference.setValue(model);
 
 
-        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
-        User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
-        User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
-        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
-        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
-        mUserReference.child(transformString(user3.getEmail())).setValue(user3);
+//        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
+//        User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
+//        User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
+//        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
+//        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
+//        mUserReference.child(transformString(user3.getEmail())).setValue(user3);
 
-        Scannable scannable1 = new Scannable("Lunch", "l1", "lunch1", "1:00 PM", "3:00 PM", "food", "22-MAR-2019");
-        Scannable scannable2 = new Scannable("Snacks", "s1", "snacks1", "4:00 PM", "5:00 PM", "food", "23-MAR-2019");
-        Scannable scannable3 = new Scannable("Dinner", "d1", "dinner1", "9:30 PM", "11:00 PM", "food", "22-MAR-2019");
+        Scannable scannable1 = new Scannable("Registration", "r1", "registration1", "06:00 PM", "08:00 PM", "reg", "22-MAR-2019");
+        Scannable scannable2 = new Scannable("Dinner", "d1", "dinner1", "10:30 PM", "11:30 PM", "food", "22-MAR-2019");
+        Scannable scannable3 = new Scannable("Snacks", "s1", "snacks1", "01:30 AM", "02:30 AM", "food", "23-MAR-2019");
+        Scannable scannable4 = new Scannable("Lunch", "l1", "lunch1", "01:30 PM", "02:30 PM", "food", "23-MAR-2019");
+        Scannable scannable5 = new Scannable("Snacks", "s2", "snacks2", "06:00 PM", "07:00 PM", "food", "22-MAR-2019");
+        Scannable scannable6 = new Scannable("Dinner", "d2", "dinner2", "09:00 PM", "10:00 PM", "food", "23-MAR-2019");
+
         List<Scannable> scannableList = new ArrayList<>();
         scannableList.add(scannable1);
         scannableList.add(scannable2);
         scannableList.add(scannable3);
+        scannableList.add(scannable4);
+        scannableList.add(scannable5);
+        scannableList.add(scannable6);
         mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
 
-        List<String> usersList = new ArrayList<>();
-        usersList.add("tushar@mail");
-        usersList.add("sparsh@gmail.com");
-        CouponsUser couponsUser = new CouponsUser(usersList);
-
-        List<String> usersList1 = new ArrayList<>();
-        usersList1.add("abc@yahoomail.com");
-        usersList1.add("bcd@g.com");
-        CouponsUser couponsUser1 = new CouponsUser(usersList1);
-        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
-        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
+//        List<String> usersList = new ArrayList<>();
+//        usersList.add("tushar@mail");
+//        usersList.add("sparsh@gmail.com");
+//        CouponsUser couponsUser = new CouponsUser(usersList);
+//
+//        List<String> usersList1 = new ArrayList<>();
+//        usersList1.add("abc@yahoomail.com");
+//        usersList1.add("bcd@g.com");
+//        CouponsUser couponsUser1 = new CouponsUser(usersList1);
+//        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
+//        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
     }
 }
