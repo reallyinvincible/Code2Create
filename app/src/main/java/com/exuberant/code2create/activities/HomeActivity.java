@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exuberant.code2create.R;
-import com.exuberant.code2create.UtilsInterface;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
 import com.exuberant.code2create.fragments.AlertFragment;
@@ -141,8 +139,6 @@ public class HomeActivity extends AppCompatActivity {
         fragmentSwitchInterface.switchToAgenda();
 
         requestMicrophonePermissions();
-
-        Log.v("somedate", String.valueOf(UtilsInterface.compareDates(UtilsInterface.getDateObject("19-MAR-2019", "9:35 AM"))));
     }
 
     void switchFragment(Fragment fragment) {
