@@ -36,6 +36,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -99,7 +100,6 @@ public class FoodCouponsFragment extends Fragment {
         adminBypassInterface = new AdminBypassInterface() {
             @Override
             public void bypassScan(String bypassedKey) {
-//                bottomSheetDialogFragment.dismiss();
                 if (bypassedKey.equals(currentScannable.getScannableKey())) {
 
                     if (currentUserList == null) {
@@ -109,7 +109,6 @@ public class FoodCouponsFragment extends Fragment {
                         currentUserList.add(email);
                     } else if (currentUserList.contains(email)) {
                         Toast.makeText(context, "Already Scanned!", Toast.LENGTH_SHORT).show();
-//                        showErrorSnackbar("Already Scanned!");
                     }
 
                     if (titleCoupon1.getText().toString().equals(currentScannable.getScannableTitle())) {
@@ -124,8 +123,11 @@ public class FoodCouponsFragment extends Fragment {
 
                 } else {
                     Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
-//                    showErrorSnackbar("Incorrect Key");
                 }
+
+                ripple.pauseAnimation();
+                ripple.setProgress(0);
+                chirp.stop();
 
                 bottomSheetDialogFragment.dismiss();
             }
@@ -224,6 +226,12 @@ public class FoodCouponsFragment extends Fragment {
     }
 
     private void listen(ImageView imageView) {
+
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) ripple.getLayoutParams();
+        params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+//        params.constraint
+        ripple.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
         ripple.playAnimation();
         chirp.start();
         ConnectEventListener chirpEventListener = new ConnectEventListener() {
@@ -275,10 +283,8 @@ public class FoodCouponsFragment extends Fragment {
     private void updatePayload(final String payload, ImageView imageView) {
         getActivity().runOnUiThread(() -> {
             TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
-            textView.setText(payload);
+            Toast.makeText(context, "Enjoy your meal", Toast.LENGTH_SHORT).show();
             setRedeemedState(imageView);
-            //--Add email to the currentList and set Value at the correct path
-
             currentUserList.add(email);
             mAttendanceReference.child(currentScannable.getScannableValue()).setValue(new CouponsUser(currentUserList));
         });
