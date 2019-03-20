@@ -35,25 +35,30 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
         Agenda agenda = agendaList.get(position);
         holder.agendaTitle.setText(agenda.getAgendaTitle());
         holder.agendaTime.setText(agenda.getStartTime());
-        switch (agenda.getType()){
-            case "reg" : holder.agendaImageView.setImageDrawable(holder.agendaImageView
-                    .getContext().getResources().getDrawable(R.drawable.ic_regs));
-            break;
+        switch (agenda.getType()) {
+            case "reg":
+                holder.agendaImageView.setImageDrawable(holder.agendaImageView
+                        .getContext().getResources().getDrawable(R.drawable.ic_regs));
+                break;
 
-            case "event" : holder.agendaImageView.setImageDrawable(holder.agendaImageView
-                    .getContext().getResources().getDrawable(R.drawable.ic_event));
-            break;
+            case "event":
+                holder.agendaImageView.setImageDrawable(holder.agendaImageView
+                        .getContext().getResources().getDrawable(R.drawable.ic_event));
+                break;
 
-            case "food" : holder.agendaImageView.setImageDrawable(holder.agendaImageView
-                    .getContext().getResources().getDrawable(R.drawable.ic_food));
-            break;
+            case "food":
+                holder.agendaImageView.setImageDrawable(holder.agendaImageView
+                        .getContext().getResources().getDrawable(R.drawable.ic_food));
+                break;
 
-            case "talk" : holder.agendaImageView.setImageDrawable(holder.agendaImageView
-                    .getContext().getResources().getDrawable(R.drawable.ic_talk));
-            break;
+            case "talk":
+                holder.agendaImageView.setImageDrawable(holder.agendaImageView
+                        .getContext().getResources().getDrawable(R.drawable.ic_talk));
+                break;
 
-            default : holder.agendaImageView.setImageDrawable(holder.agendaImageView
-                    .getContext().getResources().getDrawable(R.drawable.ic_default));
+            default:
+                holder.agendaImageView.setImageDrawable(holder.agendaImageView
+                        .getContext().getResources().getDrawable(R.drawable.ic_default));
         }
     }
 
@@ -62,7 +67,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
         return agendaList.size();
     }
 
-    class AgendaAdapterViewHolder extends RecyclerView.ViewHolder{
+    class AgendaAdapterViewHolder extends RecyclerView.ViewHolder {
 
         ImageView agendaImageView;
         TextView agendaTitle;

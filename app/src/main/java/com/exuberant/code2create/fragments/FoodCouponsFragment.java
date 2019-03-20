@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +21,6 @@ import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +36,6 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -61,8 +58,6 @@ public class FoodCouponsFragment extends Fragment {
     private ChirpConnect chirp;
     private Context context;
 
-    private ConstraintLayout constraintLayout;
-    private Button btnAudio;
     private LottieAnimationView ripple;
     private TextView somethingWrong;
     private TextView titleCoupon1, titleCoupon2, titleCoupon3;
@@ -80,7 +75,6 @@ public class FoodCouponsFragment extends Fragment {
     private DatabaseReference mAttendanceReference;
 
     private String email;
-    private String receivedString;
 
     @Nullable
     @Override
@@ -177,7 +171,6 @@ public class FoodCouponsFragment extends Fragment {
     private void initialiseViews(View view) {
         ripple = view.findViewById(R.id.lav_ripple);
 
-        constraintLayout = view.findViewById(R.id.container_coupons);
         titleCoupon1 = view.findViewById(R.id.tv_title_coupon1);
         titleCoupon2 = view.findViewById(R.id.tv_title_coupon2);
         titleCoupon3 = view.findViewById(R.id.tv_title_coupon3);
@@ -192,7 +185,6 @@ public class FoodCouponsFragment extends Fragment {
         iconCoupon3 = view.findViewById(R.id.iv_icon_coupon3);
 
         somethingWrong = view.findViewById(R.id.tv_something_wrong);
-        btnAudio = view.findViewById(R.id.btn_audio);
 
         mDatabase = FirebaseDatabase.getInstance();
         mScannablesReference = mDatabase.getReference().child("scannables").child("list");
@@ -365,12 +357,15 @@ public class FoodCouponsFragment extends Fragment {
 
         titleCoupon1.setText(scannableList.get(0).getScannableTitle());
         timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
+        setTypeIcon(iconCoupon1, scannable1.getScannableType());
 
         titleCoupon2.setText(scannableList.get(1).getScannableTitle());
         timeCoupon2.setText(String.format("%s - %s", scannable2.getScannableStartTime(), scannable2.getScannableEndTime()));
+        setTypeIcon(iconCoupon2, scannable2.getScannableType());
 
         titleCoupon3.setText(scannableList.get(2).getScannableTitle());
         timeCoupon3.setText(String.format("%s - %s", scannable3.getScannableStartTime(), scannable3.getScannableEndTime()));
+        setTypeIcon(iconCoupon3, scannable3.getScannableType());
 
         Date date11 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableStartTime());
         Date date12 = getDateObject(scannable1.getScannableDate(), scannable1.getScannableEndTime());
@@ -446,16 +441,19 @@ public class FoodCouponsFragment extends Fragment {
 
     }
 
-    void showConfirmationSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorAccent);
-        snackbar.show();
+    private void setTypeIcon(ImageView imageView, String type) {
+        switch (type) {
+            case "food":
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_food));
+                break;
+            case "swags":
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_notification));
+                break;
+            case "reg":
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_regs));
+                break;
+            default:
+                imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info));
+        }
     }
-
-    void showErrorSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
-        snackbar.show();
-    }
-
 }
