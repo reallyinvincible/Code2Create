@@ -5,7 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.adapters.SkeletonAdapter;
 import com.exuberant.code2create.adapters.SponsorAdpater;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,6 +30,7 @@ public class SponsorsFragment extends Fragment {
     DatabaseReference sponsorReference;
     RecyclerView sponsorRecyclerView;
     List<String> sponsorLinkList = new ArrayList<>();
+    SkeletonScreen skeletonScreen;
 
     @Nullable
     @Override
@@ -35,6 +39,16 @@ public class SponsorsFragment extends Fragment {
         sponsorRecyclerView = view.findViewById(R.id.rv_sponsor_list);
         mDatabase = FirebaseDatabase.getInstance();
         sponsorReference = mDatabase.getReference().child("sponsors");
+
+        SkeletonAdapter skeletonAdapter = new SkeletonAdapter();
+        skeletonScreen = Skeleton.bind(sponsorRecyclerView)
+                .adapter(skeletonAdapter)
+                .shimmer(true)
+                .angle(20)
+                .duration(1200)
+                .load(R.layout.skeleton_item_sponsor)
+                .count(10)
+                .show();
 
         sponsorReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
