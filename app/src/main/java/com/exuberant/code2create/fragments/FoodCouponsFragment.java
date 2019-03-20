@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -149,7 +148,7 @@ public class FoodCouponsFragment extends Fragment {
         });
 
 
-        mScannablesReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mScannablesReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ScannableModel scannableModel = dataSnapshot.getValue(ScannableModel.class);
@@ -304,7 +303,6 @@ public class FoodCouponsFragment extends Fragment {
                     if (!identifier.equals(currentScannable.getScannableKey())) {
                         Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
                     } else {
-                        //---Key is Correct!!
                         updatePayload(identifier, imageView);
                     }
                     ripple.pauseAnimation();
@@ -325,7 +323,6 @@ public class FoodCouponsFragment extends Fragment {
 
     private void updatePayload(final String payload, ImageView imageView) {
         getActivity().runOnUiThread(() -> {
-            TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
             Toast.makeText(context, "Enjoy your meal", Toast.LENGTH_SHORT).show();
             setRedeemedState(imageView);
             currentUserList.add(email);
@@ -364,7 +361,7 @@ public class FoodCouponsFragment extends Fragment {
         Scannable scannable2 = scannableList.get(1);
         Scannable scannable3 = scannableList.get(2);
 
-        mAttendanceReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mAttendanceReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 CouponsUser couponsUser1 = dataSnapshot.child(scannable1.getScannableValue()).getValue(CouponsUser.class);
