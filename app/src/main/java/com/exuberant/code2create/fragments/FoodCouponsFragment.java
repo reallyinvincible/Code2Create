@@ -19,6 +19,7 @@ import com.ethanhua.skeleton.SkeletonScreen;
 import com.exuberant.code2create.adapters.SkeletonAdapter;
 import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
@@ -41,6 +42,8 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -70,6 +73,7 @@ public class FoodCouponsFragment extends Fragment {
     private ImageView statusCoupon1, statusCoupon2, statusCoupon3;
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
     private BottomSheetDialogFragment bottomSheetDialogFragment;
+    private ConstraintLayout constraintLayout;
     SkeletonScreen skeletonScreen1, skeletonScreen2, skeletonScreen3;
     CardView cardView1, cardView2, cardView3;
 
@@ -106,7 +110,6 @@ public class FoodCouponsFragment extends Fragment {
         adminBypassInterface = new AdminBypassInterface() {
             @Override
             public void bypassScan(String bypassedKey) {
-//                bottomSheetDialogFragment.dismiss();
                 if (bypassedKey.equals(currentScannable.getScannableKey())) {
 
                     if (currentUserList == null) {
@@ -116,7 +119,6 @@ public class FoodCouponsFragment extends Fragment {
                         currentUserList.add(email);
                     } else if (currentUserList.contains(email)) {
                         Toast.makeText(context, "Already Scanned!", Toast.LENGTH_SHORT).show();
-//                        showErrorSnackbar("Already Scanned!");
                     }
 
                     if (titleCoupon1.getText().toString().equals(currentScannable.getScannableTitle())) {
@@ -131,8 +133,11 @@ public class FoodCouponsFragment extends Fragment {
 
                 } else {
                     Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
-//                    showErrorSnackbar("Incorrect Key");
                 }
+
+                ripple.pauseAnimation();
+                ripple.setProgress(0);
+                chirp.stop();
 
                 bottomSheetDialogFragment.dismiss();
             }
@@ -214,6 +219,7 @@ public class FoodCouponsFragment extends Fragment {
                 .load(R.layout.skeleton_item_agenda)
                 .show();
 
+        constraintLayout = view.findViewById(R.id.container_coupons);
 
         somethingWrong = view.findViewById(R.id.tv_something_wrong);
 
@@ -255,6 +261,20 @@ public class FoodCouponsFragment extends Fragment {
     }
 
     private void listen(ImageView imageView) {
+
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) ripple.getLayoutParams();
+        params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+        ripple.setLayoutParams(params);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.btn_audio, ConstraintSet.START, R.id.btn_audio, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.btn_audio, ConstraintSet.TOP, R.id.btn_audio, ConstraintSet.BOTTOM, 0);
+        constraintSet.applyTo(constraintLayout);
+
+
+        ripple.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
         ripple.playAnimation();
         chirp.start();
         ConnectEventListener chirpEventListener = new ConnectEventListener() {
@@ -306,10 +326,8 @@ public class FoodCouponsFragment extends Fragment {
     private void updatePayload(final String payload, ImageView imageView) {
         getActivity().runOnUiThread(() -> {
             TextView textView = Objects.requireNonNull(getView()).findViewById(R.id.tv_something_wrong);
-            textView.setText(payload);
+            Toast.makeText(context, "Enjoy your meal", Toast.LENGTH_SHORT).show();
             setRedeemedState(imageView);
-            //--Add email to the currentList and set Value at the correct path
-
             currentUserList.add(email);
             mAttendanceReference.child(currentScannable.getScannableValue()).setValue(new CouponsUser(currentUserList));
         });
