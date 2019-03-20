@@ -14,6 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.exuberant.code2create.adapters.SkeletonAdapter;
 import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
@@ -21,6 +24,7 @@ import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +40,7 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -65,6 +70,8 @@ public class FoodCouponsFragment extends Fragment {
     private ImageView statusCoupon1, statusCoupon2, statusCoupon3;
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
     private BottomSheetDialogFragment bottomSheetDialogFragment;
+    SkeletonScreen skeletonScreen1, skeletonScreen2, skeletonScreen3;
+    CardView cardView1, cardView2, cardView3;
 
     private Scannable currentScannable;
     private List<String> currentUserList;
@@ -170,7 +177,6 @@ public class FoodCouponsFragment extends Fragment {
 
     private void initialiseViews(View view) {
         ripple = view.findViewById(R.id.lav_ripple);
-
         titleCoupon1 = view.findViewById(R.id.tv_title_coupon1);
         titleCoupon2 = view.findViewById(R.id.tv_title_coupon2);
         titleCoupon3 = view.findViewById(R.id.tv_title_coupon3);
@@ -183,6 +189,31 @@ public class FoodCouponsFragment extends Fragment {
         iconCoupon1 = view.findViewById(R.id.iv_icon_coupon1);
         iconCoupon2 = view.findViewById(R.id.iv_icon_coupon2);
         iconCoupon3 = view.findViewById(R.id.iv_icon_coupon3);
+        cardView1 = view.findViewById(R.id.cv_coupon1);
+        cardView2 = view.findViewById(R.id.cv_coupon2);
+        cardView3 = view.findViewById(R.id.cv_coupon3);
+
+        skeletonScreen1 = Skeleton.bind(cardView1)
+                .shimmer(true)
+                .angle(20)
+                .duration(1200)
+                .load(R.layout.skeleton_item_agenda)
+                .show();
+
+        skeletonScreen2 = Skeleton.bind(cardView2)
+                .shimmer(true)
+                .angle(20)
+                .duration(1200)
+                .load(R.layout.skeleton_item_agenda)
+                .show();
+
+        skeletonScreen3 = Skeleton.bind(cardView3)
+                .shimmer(true)
+                .angle(20)
+                .duration(1200)
+                .load(R.layout.skeleton_item_agenda)
+                .show();
+
 
         somethingWrong = view.findViewById(R.id.tv_something_wrong);
 
@@ -354,6 +385,10 @@ public class FoodCouponsFragment extends Fragment {
         Scannable scannable2 = scannableList.get(1);
         Scannable scannable3 = scannableList.get(2);
 
+
+        skeletonScreen1.hide();
+        skeletonScreen2.hide();
+        skeletonScreen3.hide();
 
         titleCoupon1.setText(scannableList.get(0).getScannableTitle());
         timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
