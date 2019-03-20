@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
-    android:orientation="vertical">
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/about"
         android:textColor="@android:color/white"
         android:textSize="32sp"
@@ -28,14 +29,23 @@
         android:alpha="0.3"
         android:text="@string/knowledge_is_power_know_more"
         android:textColor="@android:color/white"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView12"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="18dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView18">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,10 +56,9 @@
                 android:id="@+id/textView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="left"
                 android:layout_margin="16dp"
                 android:text="@string/acm_vit"
-                android:textAlignment="center"
                 android:textColor="@color/textColor"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -59,6 +68,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:alpha="0.7"
+                android:justificationMode="inter_word"
+                android:lineSpacingMultiplier="1.1"
                 android:text="@string/about_acm_vit"
                 android:textAlignment="center"
                 android:textColor="@color/textColor"
@@ -74,7 +85,6 @@
                 android:layout_marginTop="36dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/code2create"
-                android:textAlignment="center"
                 android:textColor="@color/textColor"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -87,6 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="48dp"
                 android:alpha="0.7"
+                android:justificationMode="inter_word"
+                android:lineSpacingMultiplier="1.1"
                 android:text="@string/about_code2create"
                 android:textAlignment="center"
                 android:textColor="@color/textColor"
@@ -100,5 +112,5 @@
 
     </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
