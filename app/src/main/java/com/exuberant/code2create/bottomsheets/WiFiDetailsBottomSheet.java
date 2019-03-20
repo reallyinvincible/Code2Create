@@ -31,9 +31,8 @@ public class WiFiDetailsBottomSheet extends BottomSheetDialogFragment {
         wifiCouponImageView = view.findViewById(R.id.iv_wifi_coupon);
         sharedPreferences = getContext().getSharedPreferences(getContext().getString(R.string.shared_prefs_name), MODE_PRIVATE);
         String wifiCoupon = sharedPreferences.getString(getContext().getString(R.string.shared_prefs_wifi_coupon), null);
-        wifiCoupon = null;
         if (wifiCoupon != null){
-            wifiCouponTextView.setText(wifiCoupon);
+            wifiCouponTextView.setText("Your WiFi Coupon is " + wifiCoupon);
             wifiCouponImageView.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_wifi_filled));
         } else {
             wifiCouponTextView.setText("WiFi coupons are only available for External Participants\nYou are suggested to use your credentials.");
