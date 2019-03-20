@@ -71,13 +71,12 @@ public class FoodCouponsFragment extends Fragment {
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
     private BottomSheetDialogFragment bottomSheetDialogFragment;
 
-    private Scannable scannable1, scannable2, scannable3, currentScannable;
-    private List<String> userList1, userList2, userList3, currentUserList;
+    private Scannable currentScannable;
+    private List<String> currentUserList;
 
     private SharedPreferences sharedPreferences;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mScannablesReference;
-    //    DatabaseReference mCouponsListReference;
     private DatabaseReference mAttendanceReference;
 
     private String email;
@@ -106,8 +105,7 @@ public class FoodCouponsFragment extends Fragment {
         adminBypassInterface = new AdminBypassInterface() {
             @Override
             public void bypassScan(String bypassedKey) {
-                //TODO: Process the received key
-                bottomSheetDialogFragment.dismiss();
+//                bottomSheetDialogFragment.dismiss();
                 if (bypassedKey.equals(currentScannable.getScannableKey())) {
 
                     if (currentUserList == null) {
@@ -131,11 +129,11 @@ public class FoodCouponsFragment extends Fragment {
                     mAttendanceReference.child(currentScannable.getScannableValue()).setValue(new CouponsUser(currentUserList));
 
                 } else {
-//                    Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
-                    showErrorSnackbar("Incorrect Key");
+                    Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
+//                    showErrorSnackbar("Incorrect Key");
                 }
 
-//                bottomSheetDialogFragment.dismiss();
+                bottomSheetDialogFragment.dismiss();
             }
         };
 
@@ -260,7 +258,7 @@ public class FoodCouponsFragment extends Fragment {
                     String identifier = new String(data);
                     Log.v("ChirpSDK: ", "Received " + identifier);
 
-                    if (!identifier.equals(scannable1.getScannableKey())) {
+                    if (!identifier.equals(currentScannable.getScannableKey())) {
                         Toast.makeText(context, "Incorrect Key", Toast.LENGTH_SHORT).show();
                     } else {
                         //---Key is Correct!!
@@ -321,32 +319,33 @@ public class FoodCouponsFragment extends Fragment {
 
     private void processScannable(List<Scannable> scannableList) {
 
-        scannable1 = scannableList.get(0);
-        scannable2 = scannableList.get(1);
-        scannable3 = scannableList.get(2);
+        Scannable scannable1 = scannableList.get(0);
+        Scannable scannable2 = scannableList.get(1);
+        Scannable scannable3 = scannableList.get(2);
 
         mAttendanceReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                CouponsUser couponsUser = dataSnapshot.child(scannable1.getScannableValue()).getValue(CouponsUser.class);
-                if (couponsUser == null) {
-                    userList1 = new ArrayList<>();
-                } else {
-                    userList1 = couponsUser.getCouponsUserList();
+                CouponsUser couponsUser1 = dataSnapshot.child(scannable1.getScannableValue()).getValue(CouponsUser.class);
+                List<String> userList1 = new ArrayList<>();
+                List<String> userList2 = new ArrayList<>();
+                List<String> userList3 = new ArrayList<>();
+
+                if (couponsUser1 != null) {
+                    userList1 = couponsUser1.getCouponsUserList();
                 }
-                couponsUser = dataSnapshot.child(scannable2.getScannableValue()).getValue(CouponsUser.class);
-                if (couponsUser == null) {
-                    userList2 = new ArrayList<>();
-                } else {
-                    userList2 = couponsUser.getCouponsUserList();
+
+                CouponsUser couponsUser2 = dataSnapshot.child(scannable2.getScannableValue()).getValue(CouponsUser.class);
+                if (couponsUser2 != null) {
+                    userList2 = couponsUser2.getCouponsUserList();
                 }
-                couponsUser = dataSnapshot.child(scannable3.getScannableValue()).getValue(CouponsUser.class);
-                if (couponsUser == null) {
-                    userList3 = new ArrayList<>();
-                } else {
-                    userList3 = couponsUser.getCouponsUserList();
+
+                CouponsUser couponsUser3 = dataSnapshot.child(scannable3.getScannableValue()).getValue(CouponsUser.class);
+                if (couponsUser3 != null) {
+                    userList3 = couponsUser3.getCouponsUserList();
                 }
-                int a = 10;
+
+                setData(scannableList, userList1, userList2, userList3);
             }
 
             @Override
@@ -354,6 +353,15 @@ public class FoodCouponsFragment extends Fragment {
 
             }
         });
+    }
+
+
+    private void setData(List<Scannable> scannableList, List<String> userList1, List<String> userList2, List<String> userList3) {
+
+        Scannable scannable1 = scannableList.get(0);
+        Scannable scannable2 = scannableList.get(1);
+        Scannable scannable3 = scannableList.get(2);
+
 
         titleCoupon1.setText(scannableList.get(0).getScannableTitle());
         timeCoupon1.setText(String.format("%s - %s", scannable1.getScannableStartTime(), scannable1.getScannableEndTime()));
@@ -371,25 +379,10 @@ public class FoodCouponsFragment extends Fragment {
         Date date31 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableStartTime());
         Date date32 = getDateObject(scannable3.getScannableDate(), scannable3.getScannableEndTime());
 
-        /*if (compareDates(date11) == 1 && compareDates(date12) == -1) {
-            currentScannable = scannable1;
-            currentUserList = userList1;
-            if (currentUserList == null || !currentUserList.contains(email)) {
-                setRedeemState(statusCoupon1);
-            } else if (currentUserList.contains(email)) {
-                setRedeemedState(statusCoupon1);
-            }
-        } else {
-            setInvisibleState(statusCoupon1);
-        }*/
-
         if (compareDates(date11) == 1 && compareDates(date12) == -1) {
             currentScannable = scannable1;
             currentUserList = userList1;
-            if (currentUserList == null) {
-                currentUserList = new ArrayList<>();
-                setRedeemState(statusCoupon1);
-            } else if (!currentUserList.contains(email)) {
+            if (currentUserList == null || !currentUserList.contains(email)) {
                 setRedeemState(statusCoupon1);
             } else if (currentUserList.contains(email)) {
                 setRedeemedState(statusCoupon1);
@@ -464,4 +457,5 @@ public class FoodCouponsFragment extends Fragment {
         snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
         snackbar.show();
     }
+
 }

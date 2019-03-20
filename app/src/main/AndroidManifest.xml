@@ -36,8 +36,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.LoginActivity"></activity>
-        <activity android:name=".activities.HomeActivity"></activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.HomeActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
