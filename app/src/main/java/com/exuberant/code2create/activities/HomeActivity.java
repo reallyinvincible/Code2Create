@@ -16,7 +16,6 @@ import com.exuberant.code2create.R;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
 import com.exuberant.code2create.fragments.AlertFragment;
-import com.exuberant.code2create.fragments.BookmarkFragment;
 import com.exuberant.code2create.fragments.ErrorFragment;
 import com.exuberant.code2create.fragments.FaqsFragment;
 import com.exuberant.code2create.fragments.FoodCouponsFragment;
