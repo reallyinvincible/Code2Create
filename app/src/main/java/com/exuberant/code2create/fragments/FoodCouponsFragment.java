@@ -14,8 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
@@ -37,6 +37,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -66,6 +67,7 @@ public class FoodCouponsFragment extends Fragment {
     private ImageView statusCoupon1, statusCoupon2, statusCoupon3;
     private ImageView iconCoupon1, iconCoupon2, iconCoupon3;
     private BottomSheetDialogFragment bottomSheetDialogFragment;
+    private ConstraintLayout constraintLayout;
 
     private Scannable currentScannable;
     private List<String> currentUserList;
@@ -185,6 +187,7 @@ public class FoodCouponsFragment extends Fragment {
         iconCoupon1 = view.findViewById(R.id.iv_icon_coupon1);
         iconCoupon2 = view.findViewById(R.id.iv_icon_coupon2);
         iconCoupon3 = view.findViewById(R.id.iv_icon_coupon3);
+        constraintLayout = view.findViewById(R.id.container_coupons);
 
         somethingWrong = view.findViewById(R.id.tv_something_wrong);
 
@@ -230,7 +233,15 @@ public class FoodCouponsFragment extends Fragment {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) ripple.getLayoutParams();
         params.width = ConstraintLayout.LayoutParams.WRAP_CONTENT;
         params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-//        params.constraint
+        ripple.setLayoutParams(params);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(constraintLayout);
+        constraintSet.connect(R.id.btn_audio, ConstraintSet.START, R.id.btn_audio, ConstraintSet.END, 0);
+        constraintSet.connect(R.id.btn_audio, ConstraintSet.TOP, R.id.btn_audio, ConstraintSet.BOTTOM, 0);
+        constraintSet.applyTo(constraintLayout);
+
+
         ripple.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
         ripple.playAnimation();
         chirp.start();
