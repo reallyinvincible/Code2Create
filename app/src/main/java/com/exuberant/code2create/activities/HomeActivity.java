@@ -97,8 +97,8 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void switchToBookmarks() {
-                switchFragment(new BookmarkFragment());
+            public void openWiFiBottomSheet() {
+
             }
         };
 
@@ -212,7 +212,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 clearAllTints();
                 wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
-                fragmentSwitchInterface.switchToBookmarks();
+                fragmentSwitchInterface.openWiFiBottomSheet();
             }
         });
     }
