@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.bottomsheets.WiFiDetailsBottomSheet;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
 import com.exuberant.code2create.fragments.AlertFragment;
@@ -23,6 +24,7 @@ import com.exuberant.code2create.fragments.PrizesFragment;
 import com.exuberant.code2create.fragments.SponsorsFragment;
 import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -54,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_home);
 
         initializeViews();
@@ -102,7 +104,8 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void openWiFiBottomSheet() {
-
+                BottomSheetDialogFragment wifiBottomSheet = new WiFiDetailsBottomSheet();
+                wifiBottomSheet.show(getSupportFragmentManager(), "WiFi Details");
             }
         };
 
