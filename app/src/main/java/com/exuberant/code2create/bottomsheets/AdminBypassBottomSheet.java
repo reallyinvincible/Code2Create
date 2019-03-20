@@ -1,4 +1,4 @@
-package com.exuberant.code2create;
+package com.exuberant.code2create.bottomsheets;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.exuberant.code2create.BuildConfig;
+import com.exuberant.code2create.R;
 import com.exuberant.code2create.fragments.FoodCouponsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

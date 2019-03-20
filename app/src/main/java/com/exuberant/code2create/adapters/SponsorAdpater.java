@@ -12,6 +12,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class SponsorAdpater extends RecyclerView.Adapter<SponsorAdpater.SponsorViewHolder> {
 
@@ -32,7 +35,16 @@ public class SponsorAdpater extends RecyclerView.Adapter<SponsorAdpater.SponsorV
     @Override
     public void onBindViewHolder(@NonNull SponsorViewHolder holder, int position) {
         String sponsorLink = sponsorLinkList.get(position);
-        Glide.with(holder.sponsorImageView.getContext()).load(sponsorLink).into(holder.sponsorImageView);
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(holder.sponsorImageView.getContext());
+        circularProgressDrawable.setColorSchemeColors(holder.sponsorImageView.getResources().getColor(R.color.colorAccent));
+        circularProgressDrawable.setStrokeWidth(10f);
+        circularProgressDrawable.setArrowEnabled(true);
+        circularProgressDrawable.setCenterRadius(100f);
+        circularProgressDrawable.start();
+        Glide.with(holder.sponsorImageView.getContext())
+                .load(sponsorLink)
+                .placeholder(circularProgressDrawable)
+                .into(holder.sponsorImageView);
     }
 
     @Override

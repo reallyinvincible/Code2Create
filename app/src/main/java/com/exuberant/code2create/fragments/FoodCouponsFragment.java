@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.exuberant.code2create.AdminBypassBottomSheet;
+import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
 import com.exuberant.code2create.models.CouponsUser;
