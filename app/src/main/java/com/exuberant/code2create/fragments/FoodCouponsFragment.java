@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
-import com.exuberant.code2create.adapters.SkeletonAdapter;
-import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.bottomsheets.AdminBypassBottomSheet;
 import com.exuberant.code2create.interfaces.AdminBypassInterface;
@@ -25,7 +23,6 @@ import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -148,7 +145,7 @@ public class FoodCouponsFragment extends Fragment {
         });
 
 
-        mScannablesReference.addValueEventListener(new ValueEventListener() {
+        mScannablesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ScannableModel scannableModel = dataSnapshot.getValue(ScannableModel.class);
