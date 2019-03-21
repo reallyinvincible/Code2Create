@@ -284,6 +284,7 @@ public class HomeActivity extends AppCompatActivity {
             editor.clear();
             editor.apply();
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            finishAfterTransition();
         });
     }
 
