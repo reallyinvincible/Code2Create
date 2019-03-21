@@ -3,6 +3,7 @@ package com.exuberant.code2create.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -51,24 +52,22 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         initializeView();
 
         sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_name), MODE_PRIVATE);
         if (sharedPreferences.contains(getString(R.string.shared_prefs_email))) {
             launchHome();
         }
-
         loginButton.setOnClickListener(view -> {
             if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                 String email = emailET.getText().toString();
                 String password = passwordET.getText().toString();
-                String securedPass = get_SHA_512_password(password, SHA_SALT);
-                checkUser(email, securedPass);
+                checkUser(email, password);
             } else {
                 showErrorSnackbar("Email or password missing");
             }
         });
-//        addDummyValue();
     }
 
     void initializeView() {
@@ -89,13 +88,16 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(transformedEmail)) {
-                    User user = dataSnapshot.child(transformedEmail).getValue(User.class);
-
-                    if (password.equals(user.getPassword())) {
-                        saveUserInfo(email, user.getWifiCoupon());
-                        showConfirmationSnackbar("Logging you in!");
-                    } else {
-                        showErrorSnackbar("Incorrect Password!");
+                    try {
+                        User user = dataSnapshot.child(transformedEmail).getValue(User.class);
+                        if (password.equals(user.getPassword())) {
+                            saveUserInfo(email, user.getWifiCoupon());
+                            showConfirmationSnackbar("Logging you in!");
+                        } else {
+                            showErrorSnackbar("Incorrect Password!");
+                        }
+                    } catch (Exception e){
+                        showErrorSnackbar("Data cannot be processed. Contact your nearest volunteer.");
                     }
                 } else {
                     showErrorSnackbar("User not registered!!");
@@ -140,61 +142,5 @@ public class LoginActivity extends AppCompatActivity {
         Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
         snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
         snackbar.show();
-    }
-
-    void addDummyValue(){
-//        Agenda model1 = new Agenda("Registration", "6:00 PM", "8:00 PM", "22-MAR-2019", "reg");
-//        Agenda model2 = new Agenda("Opening Ceremony", "8:00 PM", "9:00 PM", "22-MAR-2019", "talk");
-//        Agenda model3 = new Agenda("Hack Starts", "9:00 PM", "", "22-MAR-2019", "event");
-//        Agenda model4 = new Agenda("Dinner", "10:30 PM", "11:30 PM", "22-MAR-2019", "food");
-//        Agenda model5 = new Agenda("Intruder", "11:30 PM", "11:59 PM", "22-MAR-2019", "event");
-//        Agenda model6 = new Agenda("Night Snacks", "1:30 AM", "2:00 AM", "23-MAR-2019", "food");
-//        agendaList = new ArrayList<>();
-//        agendaList.add(model1);
-//        agendaList.add(model2);
-//        agendaList.add(model3);
-//        agendaList.add(model4);
-//        agendaList.add(model5);
-//        agendaList.add(model6);
-//        model = new AgendaModel(agendaList);
-//        mAgendaReference.setValue(model);
-
-
-//        User user1 = new User("ssindher11@gmail.com", get_SHA_512_password("qwert", SHA_SALT), false, true, "bla78y");
-//        User user2 = new User("harsh.jain@gmail.com", get_SHA_512_password("ytrewq", SHA_SALT), true, false, "mudai897");
-//        User user3 = new User("yash@gmail.com", get_SHA_512_password("qwertyuiop", SHA_SALT), false, true, "nmudwdu7");
-//        User user4 = new User("panda@gmail.com", get_SHA_512_password("asdf", SHA_SALT), true, true, "blabla34");
-//        mUserReference.child(transformString(user1.getEmail())).setValue(user1);
-//        mUserReference.child(transformString(user2.getEmail())).setValue(user2);
-//        mUserReference.child(transformString(user3.getEmail())).setValue(user3);
-//        mUserReference.child(transformString(user4.getEmail())).setValue(user4);
-
-//        Scannable scannable1 = new Scannable("Registration", "r1", "registration1", "06:00 PM", "08:00 PM", "reg", "22-MAR-2019");
-//        Scannable scannable2 = new Scannable("Dinner", "d1", "dinner1", "10:30 PM", "11:30 PM", "food", "22-MAR-2019");
-//        Scannable scannable3 = new Scannable("Snacks", "s1", "snacks1", "01:30 AM", "02:30 AM", "food", "23-MAR-2019");
-//        Scannable scannable4 = new Scannable("Lunch", "l1", "lunch1", "01:30 PM", "02:30 PM", "food", "23-MAR-2019");
-//        Scannable scannable5 = new Scannable("Snacks", "s2", "snacks2", "06:00 PM", "07:00 PM", "food", "22-MAR-2019");
-//        Scannable scannable6 = new Scannable("Dinner", "d2", "dinner2", "09:00 PM", "10:00 PM", "food", "23-MAR-2019");
-//
-//        List<Scannable> scannableList = new ArrayList<>();
-//        scannableList.add(scannable1);
-//        scannableList.add(scannable2);
-//        scannableList.add(scannable3);
-//        scannableList.add(scannable4);
-//        scannableList.add(scannable5);
-//        scannableList.add(scannable6);
-//        mScannablesReference.child("list").setValue(new ScannableModel(scannableList));
-
-//        List<String> usersList = new ArrayList<>();
-//        usersList.add("tushar@mail");
-//        usersList.add("sparsh@gmail.com");
-//        CouponsUser couponsUser = new CouponsUser(usersList);
-//
-//        List<String> usersList1 = new ArrayList<>();
-//        usersList1.add("abc@yahoomail.com");
-//        usersList1.add("bcd@g.com");
-//        CouponsUser couponsUser1 = new CouponsUser(usersList1);
-//        mAttendanceReference.child(scannable1.getScannableValue()).setValue(couponsUser);
-//        mAttendanceReference.child(scannable2.getScannableValue()).setValue(couponsUser1);
     }
 }
