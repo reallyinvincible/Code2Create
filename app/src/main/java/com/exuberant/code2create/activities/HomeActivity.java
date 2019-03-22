@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private MaterialButton navigationButton, wifiButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
     BottomSheetBehavior bottomSheetBehavior;
+    View viewShadow;
     private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer, logoutContainer;
     private ImageView aboutImageView, agendaImageView, faqImageView, couponsImageView, prizesImageView, sponsorsImageView;
     private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView;
@@ -114,6 +115,7 @@ public class HomeActivity extends AppCompatActivity {
                     alertButton.setVisibility(View.VISIBLE);
                     wifiButton.setVisibility(View.VISIBLE);
                     closeButton.setVisibility(View.GONE);
+                    viewShadow.setVisibility(View.INVISIBLE);
 
                 } else {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_primary));
@@ -121,6 +123,7 @@ public class HomeActivity extends AppCompatActivity {
                     alertButton.setVisibility(View.GONE);
                     wifiButton.setVisibility(View.GONE);
                     closeButton.setVisibility(View.VISIBLE);
+                    viewShadow.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -182,6 +185,7 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsImageView = findViewById(R.id.iv_sponsors);
         sponsorsTextView = findViewById(R.id.tv_sponsors);
         logoutContainer = findViewById(R.id.ll_logout_container);
+        viewShadow = findViewById(R.id.view_shadow);
     }
 
     void setupBottomAppBarButtonListeners() {
@@ -190,13 +194,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+//                viewShadow.setVisibility(View.VISIBLE);
             }
         });
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                viewShadow.setVisibility(View.INVISIBLE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
@@ -319,7 +324,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-//                        Toast.makeText(HomeActivity.this, "Please Give Permission to Record Audio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, "Please Enable Audio Permission & Restart the App", Toast.LENGTH_LONG).show();
                         couponsContainer.setEnabled(false);
                     }
 

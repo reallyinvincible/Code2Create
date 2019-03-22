@@ -13,6 +13,14 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="42dp" />
 
+    <View
+        android:id="@+id/view_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.5"
+        android:background="#000000"
+        android:visibility="invisible" />
+
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -82,8 +90,8 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:backgroundTint="@android:color/transparent"
-                app:icon="@drawable/ic_close"
                 android:visibility="gone"
+                app:icon="@drawable/ic_close"
                 app:iconSize="24dp"
                 app:iconTint="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
