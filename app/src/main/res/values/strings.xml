@@ -1,16 +1,17 @@
 <resources>
     <string name="app_name">Code2Create</string>
 
-    <string name="Rs20000">\u20B920000</string>
-    <string name="Rs15000">\u20B915000</string>
-    <string name="Rs10000">\u20B910000</string>
-    <string name="Rs5000">\u20B95000</string>
+    <string name="Rs12000">\u20B912000</string>
+    <string name="Rs8000">\u20B98000</string>
+    <string name="R5000">\u20B95000</string>
+    <string name="Rs2500">\u20B92500</string>
 
     <string name="winner">Winner</string>
     <string name="best_ui_ux">Best UI/UX</string>
     <string name="second_place">Second Place</string>
     <string name="here_s_some_motivation">Here\'s some motivation…</string>
     <string name="prizes">Prizes</string>
+    <string name="most_innovative">Innovative Idea</string>
     <string name="third_place">Third Place</string>
 
     <string name="sponsors">Sponsors</string>
@@ -29,9 +30,52 @@
     <string name="clear_all_your_doubts_here">Clear all your doubts here</string>
 
     <string name="something_wrong"><u>Something Wrong?</u></string>
+    <string name="redeem">REDEEM</string>
+    <string name="redeemed">REDEEMED</string>
 
-    <style name="redeem">REDEEM</style>
+    <string name="shared_prefs_name">UserInfo</string>
+    <string name="shared_prefs_email">email</string>
+    <string name="shared_prefs_transformed_email">transformedEmail</string>
+    <string name="shared_prefs_wifi_coupon">wifiCoupon</string>
 
-    <style name="redeemed">REDEEMED</style>
+    <string name="acm_vit">ACM VIT</string>
+    <string name="about_acm_vit">Right from its inception in 2009, the ACM VIT Student Chapter has been organizing and conducting successful technical and professional development events. It hosted Compute 2013, the 6th ACM India Computing Convention from 22nd to 24th August 2013, as well as the first All India ACM Chapters Meet on 24th August 2013. It has credentials in web/mobile applications development and machine learning. The websites "All About VIT" and "VIT Cab Share" are some of the treasured creations of its core members. Technology is its cause and education its objective.</string>
+    <string name="code2create">Code2Create</string>
+    <string name="about_code2create">A thrilling tech sprint awaited by numerous innovators, Code2Create witnesses a plethora of skill sets. Code2Create is all about designing, building and creating; a place where graphic designers, software developers, app developers, and web developers collaborate intensively on projects. Code2Create\'18 saw more than 500 participants. The judges were renowned experts in their respective fields. Participants from across the country indulge in 36 hours of intense brainstorming, designing, creating and testing, along with some engaging and very enjoyable side quests. Code2Create is ACM-VIT’s flagship event and one of the grandest annual events hosted in VIT.</string>
+
+    <!--FAQs start from here-->
+    <string name="faq_q1">How do I submit my work?</string>
+    <string name="faq_a1">You can submit your projects on our portal: c2c.acmvit.in/projects</string>
+
+    <string name="faq_q2">Who will own the Intellectual Property Rights of the product developed by my team?</string>
+    <string name="faq_a2">The Intellectual Property Rights belong solely to your team until your team decides to enter into an agreement with a third party company in which case the Intellectual Property Rights will be divided equally between the company(Party 1) and your team(Party 2).</string>
+
+    <string name="faq_q3">How many reviews will be there?</string>
+    <string name="faq_a3">There will be two reviews. After the second review we will have eliminations based on te results of the first two reviews.</string>
+
+    <string name="faq_q4">What is the weightage of each review?</string>
+    <string name="faq_a4">For the 1st review we will make note of your chosen track with understanding and innovation you have shown related to the chosen problem statement.
+The 2nd review is a technical review where you will be judged based on your implementation.</string>
+
+    <string name="faq_q5">Will I get food?</string>
+    <string name="faq_a5">Yes you will get loads of yummy food to fill your bellies with!</string>
+
+    <string name="faq_q6">What do I do if I want to rest?</string>
+    <string name="faq_a6">We have a lounge in the CS Hall for the participants to relax. Just ask any of the volunteers around and they will guide you to the place. You are welcome to rest on the mattresses and beanbags provided in the lounge, or even participate in one of the many fun activities to refresh your mind.</string>
+
+    <string name="faq_q7">Who is on the Judging Panel?</string>
+    <string name="faq_a7">There will be 6 judges forming 3 panels of 2 judges each.</string>
+
+    <string name="faq_q8">Can we work on our own problem statements?</string>
+    <string name="faq_a8">Of course! As long as your problem statement is relevant to one of the tracks provided, you are free to work on any problem statement to your liking.</string>
+
+    <string name="faq_q9">What do I do if I need an internet connection?</string>
+    <string name="faq_a9">You will be provided with free access to our beloved internet facility, VOLSBB. If you have any issues with the internet contact any of our organisers for assistance.</string>
+
+    <string name="faq_q10">What will we be judging criterion?</string>
+    <string name="faq_a10">The criterion for evaluations are: Simplicity, Design, Solution to real time problem, Technology and Feasibility as a product.</string>
+
+    <string name="faq_q11">Who do I contact if I face any problems?</string>
+    <string name="faq_a11">We have our organising team to assist you with any problems that you might face during the hackathon. You can call on any one of us, we will do our best to assist you.</string>
 
 </resources>

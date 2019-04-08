@@ -2,15 +2,13 @@ package com.exuberant.code2create.models;
 
 public class Agenda {
     String agendaTitle;
-    String agendaDescription;
     String startTime;
     String endTime;
     String date;
     String type;
 
-    public Agenda(String agendaTitle, String agendaDescription, String startTime, String endTime, String date, String type) {
+    public Agenda(String agendaTitle, String startTime, String endTime, String date, String type) {
         this.agendaTitle = agendaTitle;
-        this.agendaDescription = agendaDescription;
         this.startTime = startTime;
         this.endTime = endTime;
         this.date = date;
@@ -26,15 +24,6 @@ public class Agenda {
 
     public void setAgendaTitle(String agendaTitle) {
         this.agendaTitle = agendaTitle;
-    }
-
-    public String getAgendaDescription() {
-
-        return agendaDescription;
-    }
-
-    public void setAgendaDescription(String agendaDescription) {
-        this.agendaDescription = agendaDescription;
     }
 
     public String getStartTime() {

@@ -9,5 +9,5 @@ public interface FragmentSwitchInterface {
     void switchToSponsors();
     void switchToError();
     void switchToAlerts();
-    void switchToBookmarks();
+    void openWiFiBottomSheet();
 }

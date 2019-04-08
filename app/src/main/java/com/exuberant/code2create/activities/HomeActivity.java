@@ -1,17 +1,22 @@
 package com.exuberant.code2create.activities;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.bottomsheets.WiFiDetailsBottomSheet;
 import com.exuberant.code2create.fragments.AboutFragment;
 import com.exuberant.code2create.fragments.AgendaFragment;
 import com.exuberant.code2create.fragments.AlertFragment;
-import com.exuberant.code2create.fragments.BookmarkFragment;
 import com.exuberant.code2create.fragments.ErrorFragment;
 import com.exuberant.code2create.fragments.FaqsFragment;
 import com.exuberant.code2create.fragments.FoodCouponsFragment;
@@ -19,6 +24,7 @@ import com.exuberant.code2create.fragments.PrizesFragment;
 import com.exuberant.code2create.fragments.SponsorsFragment;
 import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -36,16 +42,18 @@ import androidx.transition.Fade;
 public class HomeActivity extends AppCompatActivity {
 
     static FragmentSwitchInterface fragmentSwitchInterface;
-    private MaterialButton navigationButton, bookmarkButton, alertButton, closeButton;
+    private MaterialButton navigationButton, wifiButton, alertButton, closeButton;
     private LinearLayout bottomSheetLayout;
     BottomSheetBehavior bottomSheetBehavior;
-    private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer;
+    View viewShadow;
+    private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer, logoutContainer;
     private ImageView aboutImageView, agendaImageView, faqImageView, couponsImageView, prizesImageView, sponsorsImageView;
     private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_home);
 
         initializeViews();
@@ -92,8 +100,9 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void switchToBookmarks() {
-                switchFragment(new BookmarkFragment());
+            public void openWiFiBottomSheet() {
+                BottomSheetDialogFragment wifiBottomSheet = new WiFiDetailsBottomSheet();
+                wifiBottomSheet.show(getSupportFragmentManager(), "WiFi Details");
             }
         };
 
@@ -104,15 +113,17 @@ public class HomeActivity extends AppCompatActivity {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_accent));
                     navigationButton.setVisibility(View.VISIBLE);
                     alertButton.setVisibility(View.VISIBLE);
-                    bookmarkButton.setVisibility(View.VISIBLE);
+                    wifiButton.setVisibility(View.VISIBLE);
                     closeButton.setVisibility(View.GONE);
+                    viewShadow.setVisibility(View.INVISIBLE);
 
                 } else {
                     bottomSheetLayout.setBackground(getResources().getDrawable(R.drawable.rounded_corner_bottom_sheet_primary));
                     navigationButton.setVisibility(View.GONE);
                     alertButton.setVisibility(View.GONE);
-                    bookmarkButton.setVisibility(View.GONE);
+                    wifiButton.setVisibility(View.GONE);
                     closeButton.setVisibility(View.VISIBLE);
+                    viewShadow.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -126,7 +137,11 @@ public class HomeActivity extends AppCompatActivity {
 
         setupMenuListeners();
 
-        HomeActivity.getFragmentSwitchInterface().switchToError();
+        clearAllTints();
+        agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+        agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
+        agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+        fragmentSwitchInterface.switchToAgenda();
 
         requestMicrophonePermissions();
     }
@@ -147,7 +162,7 @@ public class HomeActivity extends AppCompatActivity {
     void initializeViews() {
         navigationButton = findViewById(R.id.btn_navigation);
         alertButton = findViewById(R.id.btn_alerts);
-        bookmarkButton = findViewById(R.id.btn_bookmarks);
+        wifiButton = findViewById(R.id.btn_wifi);
         bottomSheetLayout = findViewById(R.id.bottom_sheet);
         closeButton = findViewById(R.id.btn_close_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -169,6 +184,8 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsContainer = findViewById(R.id.ll_sponsors_container);
         sponsorsImageView = findViewById(R.id.iv_sponsors);
         sponsorsTextView = findViewById(R.id.tv_sponsors);
+        logoutContainer = findViewById(R.id.ll_logout_container);
+        viewShadow = findViewById(R.id.view_shadow);
     }
 
     void setupBottomAppBarButtonListeners() {
@@ -177,13 +194,14 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-
+//                viewShadow.setVisibility(View.VISIBLE);
             }
         });
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                viewShadow.setVisibility(View.INVISIBLE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
@@ -197,86 +215,77 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+        wifiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearAllTints();
-                bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_filled));
-                fragmentSwitchInterface.switchToBookmarks();
+                wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
+                fragmentSwitchInterface.openWiFiBottomSheet();
             }
         });
     }
 
     void setupMenuListeners() {
-        aboutContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                aboutContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about_tint));
-                aboutTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToAbout();
-            }
+        aboutContainer.setOnClickListener(view -> {
+            clearAllTints();
+            aboutContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            aboutImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_about_tint));
+            aboutTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToAbout();
         });
 
-        agendaContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
-                agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToAgenda();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        agendaContainer.setOnClickListener(view -> {
+            clearAllTints();
+            agendaContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
+            agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToAgenda();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        faqContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                faqContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
-                faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToFaq();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        faqContainer.setOnClickListener(view -> {
+            clearAllTints();
+            faqContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            faqImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_faqs_tint));
+            faqTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToFaq();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        couponsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                couponsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
-                couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToCoupons();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        couponsContainer.setOnClickListener(view -> {
+            clearAllTints();
+            couponsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            couponsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coupons_tint));
+            couponsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToCoupons();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        prizesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                prizesContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
-                prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToPrizes();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        prizesContainer.setOnClickListener(view -> {
+            clearAllTints();
+            prizesContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            prizesImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_prizes_tint));
+            prizesTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToPrizes();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
 
-        sponsorsContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clearAllTints();
-                sponsorsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
-                sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
-                sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
-                fragmentSwitchInterface.switchToSponsors();
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-            }
+        sponsorsContainer.setOnClickListener(view -> {
+            clearAllTints();
+            sponsorsContainer.setBackground(getResources().getDrawable(R.drawable.menu_selection_background));
+            sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors_tint));
+            sponsorsTextView.setTextColor(getResources().getColor(R.color.colorAccent));
+            fragmentSwitchInterface.switchToSponsors();
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
+
+        logoutContainer.setOnClickListener(view -> {
+            SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_name), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.apply();
+            startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+            finishAfterTransition();
         });
     }
 
@@ -299,7 +308,7 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsContainer.setBackgroundResource(0);
         sponsorsImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_sponsors));
         sponsorsTextView.setTextColor(getResources().getColor(R.color.textColor));
-        bookmarkButton.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_outlined));
+        wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
         alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
     }
 
@@ -315,7 +324,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-//                        Toast.makeText(HomeActivity.this, "Please Give Permission to Record Audio", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, "Please Enable Audio Permission & Restart the App", Toast.LENGTH_LONG).show();
                         couponsContainer.setEnabled(false);
                     }
 
@@ -325,5 +334,26 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 })
                 .check();
+    }
+
+    private boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }
