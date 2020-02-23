@@ -23,6 +23,7 @@ import com.exuberant.code2create.models.CouponsUser;
 import com.exuberant.code2create.models.Scannable;
 import com.exuberant.code2create.models.ScannableModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -80,6 +81,8 @@ public class FoodCouponsFragment extends Fragment {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mScannablesReference;
     private DatabaseReference mAttendanceReference;
+    private String uid;
+    private FirebaseAuth mAuth;
 
     private String email;
 
@@ -90,8 +93,9 @@ public class FoodCouponsFragment extends Fragment {
         context = this.getContext();
         initialiseViews(view);
 
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_prefs_name), Context.MODE_PRIVATE);
+       /* sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_prefs_name), Context.MODE_PRIVATE);
         email = sharedPreferences.getString("email", null);
+        */
 
         //---------------------Initialise Chirp------------------------------
         chirp = new ChirpConnect(context, CHIRP_APP_KEY, CHIRP_APP_SECRET);
@@ -110,10 +114,10 @@ public class FoodCouponsFragment extends Fragment {
 
                     if (currentUserList == null) {
                         currentUserList = new ArrayList<>();
-                        currentUserList.add(email);
-                    } else if (!currentUserList.contains(email)) {
-                        currentUserList.add(email);
-                    } else if (currentUserList.contains(email)) {
+                        currentUserList.add(uid);
+                    } else if (!currentUserList.contains(uid)) {
+                        currentUserList.add(uid);
+                    } else if (currentUserList.contains(uid)) {
                         Toast.makeText(context, "Already Scanned!", Toast.LENGTH_SHORT).show();
                     }
 
@@ -193,6 +197,8 @@ public class FoodCouponsFragment extends Fragment {
         cardView1 = view.findViewById(R.id.cv_coupon1);
         cardView2 = view.findViewById(R.id.cv_coupon2);
         cardView3 = view.findViewById(R.id.cv_coupon3);
+        mAuth=FirebaseAuth.getInstance();
+        uid=mAuth.getUid();
 
         skeletonScreen1 = Skeleton.bind(cardView1)
                 .shimmer(true)
@@ -322,7 +328,7 @@ public class FoodCouponsFragment extends Fragment {
         getActivity().runOnUiThread(() -> {
             Toast.makeText(context, "Enjoy your meal", Toast.LENGTH_SHORT).show();
             setRedeemedState(imageView);
-            currentUserList.add(email);
+            currentUserList.add(uid);
             mAttendanceReference.child(currentScannable.getScannableValue()).setValue(new CouponsUser(currentUserList));
         });
     }
@@ -424,9 +430,9 @@ public class FoodCouponsFragment extends Fragment {
         if (compareDates(date11) == 1 && compareDates(date12) == -1) {
             currentScannable = scannable1;
             currentUserList = userList1;
-            if (currentUserList == null || !currentUserList.contains(email)) {
+            if (currentUserList == null || !currentUserList.contains(uid)) {
                 setRedeemState(statusCoupon1);
-            } else if (currentUserList.contains(email)) {
+            } else if (currentUserList.contains(uid)) {
                 setRedeemedState(statusCoupon1);
             }
         } else {
@@ -436,9 +442,9 @@ public class FoodCouponsFragment extends Fragment {
         if (compareDates(date21) == 1 && compareDates(date22) == -1) {
             currentScannable = scannable2;
             currentUserList = userList2;
-            if (currentUserList == null || !currentUserList.contains(email)) {
+            if (currentUserList == null || !currentUserList.contains(uid)) {
                 setRedeemState(statusCoupon2);
-            } else if (currentUserList.contains(email)) {
+            } else if (currentUserList.contains(uid)) {
                 setRedeemedState(statusCoupon2);
             }
         } else {
@@ -448,9 +454,9 @@ public class FoodCouponsFragment extends Fragment {
         if (compareDates(date31) == 1 && compareDates(date32) == -1) {
             currentScannable = scannable3;
             currentUserList = userList3;
-            if (currentUserList == null || !currentUserList.contains(email)) {
+            if (currentUserList == null || !currentUserList.contains(uid)) {
                 setRedeemState(statusCoupon3);
-            } else if (currentUserList.contains(email)) {
+            } else if (currentUserList.contains(uid)) {
                 setRedeemedState(statusCoupon3);
             }
         } else {

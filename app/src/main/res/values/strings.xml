@@ -77,5 +77,6 @@ The 2nd review is a technical review where you will be judged based on your impl
 
     <string name="faq_q11">Who do I contact if I face any problems?</string>
     <string name="faq_a11">We have our organising team to assist you with any problems that you might face during the hackathon. You can call on any one of us, we will do our best to assist you.</string>
+    <string name="login_success">Sign In Success</string>
 
 </resources>
