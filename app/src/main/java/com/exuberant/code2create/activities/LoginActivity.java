@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final String TAG = "GoogleAuth";
-
     private final static String SHA_SALT = "ACM_Rocks";
 
     Button loginButton;
@@ -84,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
 
         initializeView();
 
@@ -189,13 +187,6 @@ public class LoginActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-
-    @Override
-    public void onBackPressed() {
-        linerarLayout1.setVisibility(View.GONE);
-        cardView.setVisibility(View.VISIBLE);
-    }
-
     private void signIn() {
         loginButton.setAlpha((float) 0.5);
         progressBar.setVisibility(View.VISIBLE);
@@ -223,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(),  null);
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -236,7 +227,6 @@ public class LoginActivity extends AppCompatActivity {
                             uid = mAuth.getUid();
                             mUserReference.child(uid).setValue(email);
                             showConfirmationSnackbar("Sign In Success");
-                            launchHome();
                         } else {
                             loginButton.setAlpha(1);
                             progressBar.setVisibility(View.GONE);
@@ -260,7 +250,6 @@ public class LoginActivity extends AppCompatActivity {
                             uid = mAuth.getUid();
                             mUserReference.child(uid).setValue(email);
                             showConfirmationSnackbar("Sign In Success");
-                            launchHome();
                         } else {
                             showErrorSnackbar("User does not exist in Database");
                         }
@@ -280,11 +269,13 @@ public class LoginActivity extends AppCompatActivity {
     private void tvClicked() {
         if (tvLogin.getText().toString().equals("Click Here")) {
             tvLogin.setText("Login");
-            tvSentence.setText("Already Registered !!!");
+            tvSentence.setText("Already Registered, ");
             linerarLayout1.setVisibility(View.GONE);
             cardView.setVisibility(View.VISIBLE);
         } else if (tvLogin.getText().toString().equals("Login")) {
             signInButton.setText("Login");
+            tvSentence.setVisibility(View.INVISIBLE);
+            tvLogin.setVisibility(View.INVISIBLE);
         }
 
 
@@ -316,16 +307,14 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             compareEmail(email);
-                        }
-                        if (!task.isSuccessful()) {
-                            FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                            Toast.makeText(LoginActivity.this, "Failed Registration: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
+                            showErrorSnackbar("User Not Registered");
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }
                     }
                 });
     }
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.exuberant.code2create;
 
+import android.util.Log;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -42,8 +44,10 @@ public class UtilsInterface {
         return null;
     }
 
-    public static int compareDates(Date date){
+        public static int compareDates(Date date){
         Date currentDate = Calendar.getInstance().getTime();
+        Log.d("Date",currentDate.toString());
+        Log.d("Date1", String.valueOf(currentDate.compareTo(date)));
         return currentDate.compareTo(date);
     }
 
