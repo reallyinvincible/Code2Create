@@ -1,10 +1,12 @@
 package com.exuberant.code2create.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -47,7 +49,15 @@ public class SignUpFragment extends Fragment {
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                     String email = emailET.getText().toString();
                     String password = passwordET.getText().toString();
-
+                    try {
+                        InputMethodManager imm = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        }
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                    }
                     userRegistration(email, password);
 
                 } else {
@@ -59,19 +69,6 @@ public class SignUpFragment extends Fragment {
         return view;
     }
 
-    void showConfirmationSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorAccent);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-
-                LoginActivity.getLoginActivityInterface().launchHome();
-                getActivity().finish();
-            }
-        });
-        snackbar.show();
-    }
 
     void showErrorSnackbar(String message) {
         Snackbar snackbar = Snackbar.make(getView(), message, Snackbar.LENGTH_SHORT);
@@ -110,7 +107,7 @@ public class SignUpFragment extends Fragment {
                             });
                             snackbar.show();
                         } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            showErrorSnackbar("User Already Registered");
                         }
                     }
                 });

@@ -46,6 +46,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -59,7 +60,6 @@ public class LoginFragment extends Fragment {
     private DatabaseReference mEmailReference;
     private DatabaseReference mScannablesReference;
     private DatabaseReference mAttendanceReference;
-
     private static final int GOOGLE_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -78,6 +78,7 @@ public class LoginFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     ConstraintLayout constraintLayout;
+    private ArrayList<String> registeredEmailList;
 
     public LoginFragment() {
 
@@ -91,6 +92,10 @@ public class LoginFragment extends Fragment {
         initializeView(view);
 
 
+        fetchList();
+
+        Log.d("SIZE", String.valueOf(registeredEmailList.size()));
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +106,7 @@ public class LoginFragment extends Fragment {
 
 
         LoginTV.setOnClickListener(v -> {
-            LoginActivity.getLoginActivityInterface().switchToSignIp();
+            LoginActivity.getLoginActivityInterface().switchToSignUp();
         });
 
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -197,35 +202,21 @@ public class LoginFragment extends Fragment {
 
 
     private void compareEmail(String email) {
-        mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        String registeredEmail = dataSnapshot1.getValue(String.class);
-                        if (registeredEmail.equals(email)) {
-                            uid = mAuth.getUid();
-                            mUserReference.child(uid).setValue(email);
-                            showConfirmationSnackbar("Sign In Success");
-                            loginState = 1;
-                            editor.putInt("loginState", loginState);
-                            editor.apply();
-                            progressBar.setVisibility(View.GONE);
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            showErrorSnackbar("User does not exist in Database");
-                        }
-                    }
-                }
+
+        for (int i = 0; i < registeredEmailList.size(); i++) {
+            if (String.valueOf(i).equals(email)) {
+                uid = mAuth.getUid();
+                mUserReference.child(uid).setValue(email);
+                loginState = 1;
+                editor.putInt("loginState", loginState);
+                editor.apply();
+                progressBar.setVisibility(View.GONE);
+                showConfirmationSnackbar("Sign In Success");
+            } else {
+                progressBar.setVisibility(View.GONE);
+                showErrorSnackbar("User does not exist in Database");
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
+        }
     }
 
     private void userLogin(String email, String password) {
@@ -254,6 +245,7 @@ public class LoginFragment extends Fragment {
     private void initializeView(View view) {
         constraintLayout = view.findViewById(R.id.cl_login);
         loginButton = view.findViewById(R.id.btn_login);
+        registeredEmailList = new ArrayList<>();
         emailET = view.findViewById(R.id.et_email);
         passwordET = view.findViewById(R.id.et_password);
         LoginTV = view.findViewById(R.id.tv_login);
@@ -277,4 +269,25 @@ public class LoginFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
     }
+
+    private void fetchList() {
+        mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String registeredEmail = dataSnapshot1.getValue(String.class);
+                        registeredEmailList.add(registeredEmail);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 }

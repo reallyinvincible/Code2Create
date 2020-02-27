@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (loginState==1) {
+        if (loginState == 1) {
                 launchHome();
             }
     }
@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void switchToSignIp() {
+            public void switchToSignUp() {
                 fragmentStack.push(new SignUpFragment());
                 fragmentTransition(fragmentStack.peek());
             }
