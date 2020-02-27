@@ -47,6 +47,7 @@ public class FaqsFragment extends Fragment {
         faqsRecyclerView.setAdapter(faqsAdapter);
         faqsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+
         return view;
     }
 }

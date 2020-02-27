@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -74,6 +75,7 @@ public class FoodCouponsFragment extends Fragment {
     SkeletonScreen skeletonScreen1, skeletonScreen2, skeletonScreen3;
     CardView cardView1, cardView2, cardView3;
 
+    ConstraintLayout foodContainer;
     private Scannable currentScannable;
     private List<String> currentUserList;
 
@@ -199,6 +201,7 @@ public class FoodCouponsFragment extends Fragment {
         cardView3 = view.findViewById(R.id.cv_coupon3);
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getUid();
+        foodContainer=view.findViewById(R.id.container_food);
 
         skeletonScreen1 = Skeleton.bind(cardView1)
                 .shimmer(true)
@@ -471,7 +474,7 @@ public class FoodCouponsFragment extends Fragment {
             Scannable scannable = scannableList.get(i);
             Date date = getDateObject(scannable.getScannableDate(), scannable.getScannableEndTime());
             if (compareDates(date) == -1) {
-                break;
+                foodContainer.setBackground(Drawable.createFromPath("@drawable/ic_error"));
             }
         }
 

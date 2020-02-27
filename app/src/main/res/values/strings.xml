@@ -81,11 +81,12 @@ The 2nd review is a technical review where you will be judged based on your impl
     <string name="faq_a11">We have our organising team to assist you with any problems that you might face during the hackathon. You can call on any one of us, we will do our best to assist you.</string>
     <string name="login_success">Sign In Success</string>
     <string name="click_here">Click Here</string>
-    <string name="not_a_google_account">Not a Google Account ?</string>
+    <string name="not_a_google_account">Not Registered ?</string>
     <string name="sign_in">Sign In</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
-    <string name="begin">Begin</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
 
 </resources>

@@ -3,16 +3,21 @@ package com.exuberant.code2create.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.fragments.LoginFragment;
+import com.exuberant.code2create.fragments.SignUpFragment;
+import com.exuberant.code2create.interfaces.LoginActivityInterface;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.models.AgendaModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,44 +41,48 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import static androidx.core.app.ActivityCompat.finishAfterTransition;
 import static com.exuberant.code2create.UtilsInterface.transformString;
 
 
 public class LoginActivity extends AppCompatActivity {
 
-    SharedPreferences sharedPreferences;
-
-    FirebaseDatabase mDatabase;
-    DatabaseReference mUserReference;
-    DatabaseReference mAgendaReference;
-    DatabaseReference mEmailReference;
-    DatabaseReference mScannablesReference;
-    DatabaseReference mAttendanceReference;
-
-    private static final int GOOGLE_SIGN_IN = 123;
-    private GoogleSignInClient mGoogleSignInClient;
+    static LoginActivityInterface loginActivityInterface;
+    private FragmentManager mFragmentManager;
+    private Stack<Fragment> fragmentStack = new Stack<>();
+    private String TAG = "ACM";
     private FirebaseAuth mAuth;
-    private static final String TAG = "GoogleAuth";
-    private final static String SHA_SALT = "ACM_Rocks";
+    private FrameLayout mFrameLayout;
+    SharedPreferences sharedPreferences;
+    Integer loginState;
 
-    Button loginButton;
-    EditText emailET, passwordET;
-    CardView signUPCardView;
-    ProgressBar progressBar;
-    String uid;
-    TextView LoginTV, sentenceTv;
-    LinearLayout googleAuthLinearLayout;
-    Button signInButton;
-    List<Agenda> agendaList;
-    AgendaModel model;
+    @Override
+    public void onBackPressed() {
+        if (fragmentStack.size() == 1) {
+            finish();
+        } else {
+            fragmentStack.pop();
+            fragmentTransition(fragmentStack.peek());
+        }
+    }
 
-    ConstraintLayout constraintLayout;
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (loginState==1) {
+                launchHome();
+            }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,237 +90,62 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initializeView();
+        fragmentTransition(new LoginFragment());
+        fragmentStack.push(new LoginFragment());
 
-        try {
-            if (mAuth.getCurrentUser() != null) {
-                launchHome();
+        loginActivityInterface = new LoginActivityInterface() {
+            @Override
+            public void launchHome() {
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                finish();
+                startActivity(intent);
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Crash");
 
-        }
-
-        loginButton.setOnClickListener(view -> {
-            signIn();
-
-        });
-
-        LoginTV.setOnClickListener(v -> {
-            googleAuthToEmailAuthSwitch();
-        });
-
-
-        signInButton.setOnClickListener(view -> {
-            if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
-                String email = emailET.getText().toString();
-                String password = passwordET.getText().toString();
-
-                if (signInButton.getText().toString().equals("Register")) {
-
-                    userRegistration(email, password);
-
-                } else if (signInButton.getText().toString().equals("Login")) {
-
-                    userLogin(email, password);
-                }
-
-            } else {
-                showErrorSnackbar("Email or password missing");
+            @Override
+            public void switchToSignIp() {
+                fragmentStack.push(new SignUpFragment());
+                fragmentTransition(fragmentStack.peek());
             }
-        });
+
+            @Override
+            public void switchToLogin() {
+                fragmentStack.pop();
+                fragmentTransition(fragmentStack.peek());
+            }
+        };
 
 
+    }
+
+    public void launchHome() {
+        startActivity(new Intent(this, HomeActivity.class));
+        finishAfterTransition();
     }
 
 
     void initializeView() {
-        constraintLayout = findViewById(R.id.cl_login);
-        loginButton = findViewById(R.id.btn_login);
-        emailET = findViewById(R.id.et_email);
-        passwordET = findViewById(R.id.et_password);
-        LoginTV = findViewById(R.id.tv_login);
-        sentenceTv = findViewById(R.id.tv_sentence);
-        signUPCardView = findViewById(R.id.cardView);
         mAuth = FirebaseAuth.getInstance();
-        signInButton = findViewById(R.id.btn_sign_in);
-        progressBar = findViewById(R.id.progressBar);
-        mDatabase = FirebaseDatabase.getInstance();
-        mEmailReference = mDatabase.getReference().child("registeredEmails");
-        mAgendaReference = mDatabase.getReference().child("agendas");
-        mUserReference = mDatabase.getReference().child("users");
-        mScannablesReference = mDatabase.getReference().child("scannables");
-        mAttendanceReference = mScannablesReference.child("attendance");
-        googleAuthLinearLayout = findViewById(R.id.linearLayout1);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mFrameLayout = findViewById(R.id.login_signup_frame);
+        mFragmentManager = getSupportFragmentManager();
+        sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        loginState = sharedPreferences.getInt("loginState", 0);
     }
 
 
-    void saveUserInfo(String email, String wifiCoupon) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getString(R.string.shared_prefs_email), email);
-        editor.putString(getString(R.string.shared_prefs_transformed_email), transformString(email));
-        editor.putString(getString(R.string.shared_prefs_wifi_coupon), wifiCoupon);
-        editor.apply();
+    private void fragmentTransition(Fragment fragment) {
+        fragment.setEnterTransition(new Fade());
+        fragment.setExitTransition(new Fade());
+        mFragmentManager.beginTransaction()
+                .replace(R.id.login_signup_frame, fragment)
+                .commit();
     }
 
-    void launchHome() {
-        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        finishAfterTransition();
+    public static LoginActivityInterface getLoginActivityInterface() {
+        return loginActivityInterface;
     }
-
-    void showConfirmationSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorAccent);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                launchHome();
-                finish();
-            }
-        });
-        snackbar.show();
-    }
-
-    void showErrorSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
-        snackbar.show();
-    }
-
-    private void signIn() {
-        loginButton.setAlpha((float) 0.5);
-        progressBar.setVisibility(View.VISIBLE);
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == GOOGLE_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            try {
-                GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) firebaseAuthWithGoogle(account);
-                Log.e(TAG, "Google Sign In successful with Account Id" + account);
-            } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
-            }
-        }
-    }
-
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
-                            Log.d(TAG, "signInWithCredential:success");
-                            mAuth = FirebaseAuth.getInstance();
-                            String email = mAuth.getCurrentUser().getEmail();
-                            uid = mAuth.getUid();
-                            mUserReference.child(uid).setValue(email);
-                            showConfirmationSnackbar("Sign In Success");
-                        } else {
-                            loginButton.setAlpha(1);
-                            progressBar.setVisibility(View.GONE);
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            showErrorSnackbar("Sign In Error, Contact the Admin");
-                        }
-                    }
-                });
-
-    }
-
-
-    private void compareEmail(String email) {
-        mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        String registeredEmail = dataSnapshot1.getValue(String.class);
-                        if (registeredEmail.equals(email)) {
-                            uid = mAuth.getUid();
-                            mUserReference.child(uid).setValue(email);
-                            showConfirmationSnackbar("Sign In Success");
-                        } else {
-                            showErrorSnackbar("User does not exist in Database");
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
-    private void googleAuthToEmailAuthSwitch() {
-        if (LoginTV.getText().toString().equals("Click Here")) {
-            LoginTV.setText("Login");
-            sentenceTv.setText("Already Registered, ");
-            googleAuthLinearLayout.setVisibility(View.GONE);
-            signUPCardView.setVisibility(View.VISIBLE);
-        } else if (LoginTV.getText().toString().equals("Login")) {
-            signInButton.setText("Login");
-            sentenceTv.setVisibility(View.INVISIBLE);
-            LoginTV.setVisibility(View.INVISIBLE);
-        }
-
-
-    }
-
-    private void userRegistration(String email, String password) {
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "createUserWithEmail:success");
-                            signInButton.setText("Login");
-                            passwordET.setText(null);
-                            emailET.setText(null);
-                        } else {
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void userLogin(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithEmail:success");
-                            compareEmail(email);
-                        } else {
-                            showErrorSnackbar("User Not Registered");
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                        }
-                    }
-                });
-    }
-
-
 
 }
+
+
+
 
