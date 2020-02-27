@@ -43,7 +43,7 @@ public class FaqsFragment extends Fragment {
         faqsList.add(new FaqsModel(R.string.faq_q10,R.string.faq_a10));
         faqsList.add(new FaqsModel(R.string.faq_q11,R.string.faq_a11));
 
-        FaqsAdapter faqsAdapter  =new FaqsAdapter(faqsList);
+        FaqsAdapter faqsAdapter = new FaqsAdapter(faqsList);
         faqsRecyclerView.setAdapter(faqsAdapter);
         faqsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -197,8 +197,8 @@ public class FoodCouponsFragment extends Fragment {
         cardView1 = view.findViewById(R.id.cv_coupon1);
         cardView2 = view.findViewById(R.id.cv_coupon2);
         cardView3 = view.findViewById(R.id.cv_coupon3);
-        mAuth=FirebaseAuth.getInstance();
-        uid=mAuth.getUid();
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getUid();
 
         skeletonScreen1 = Skeleton.bind(cardView1)
                 .shimmer(true)

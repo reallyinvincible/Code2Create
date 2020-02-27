@@ -24,10 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdapterViewHolder> {
 
     List<Agenda> agendaList;
-    String endTime;
-    String startTime;
-    Integer var2,var1;
-    String date;
 
     public AgendaAdapter(List<Agenda> agendaList) {
         this.agendaList = agendaList;

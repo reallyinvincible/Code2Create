@@ -64,20 +64,16 @@ public class LoginActivity extends AppCompatActivity {
 
     Button loginButton;
     EditText emailET, passwordET;
-    CardView cardView;
+    CardView signUPCardView;
     ProgressBar progressBar;
     String uid;
-    TextView tvLogin, tvSentence;
-    LinearLayout linerarLayout1;
+    TextView LoginTV, sentenceTv;
+    LinearLayout googleAuthLinearLayout;
     Button signInButton;
     List<Agenda> agendaList;
     AgendaModel model;
 
     ConstraintLayout constraintLayout;
-
-    public LoginActivity() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +96,8 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
-        tvLogin.setOnClickListener(v -> {
-            tvClicked();
+        LoginTV.setOnClickListener(v -> {
+            googleAuthToEmailAuthSwitch();
         });
 
 
@@ -133,9 +129,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.btn_login);
         emailET = findViewById(R.id.et_email);
         passwordET = findViewById(R.id.et_password);
-        tvLogin = findViewById(R.id.tv_login);
-        tvSentence = findViewById(R.id.tv_sentence);
-        cardView = findViewById(R.id.cardView);
+        LoginTV = findViewById(R.id.tv_login);
+        sentenceTv = findViewById(R.id.tv_sentence);
+        signUPCardView = findViewById(R.id.cardView);
         mAuth = FirebaseAuth.getInstance();
         signInButton = findViewById(R.id.btn_sign_in);
         progressBar = findViewById(R.id.progressBar);
@@ -145,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         mUserReference = mDatabase.getReference().child("users");
         mScannablesReference = mDatabase.getReference().child("scannables");
         mAttendanceReference = mScannablesReference.child("attendance");
-        linerarLayout1 = findViewById(R.id.linearLayout1);
+        googleAuthLinearLayout = findViewById(R.id.linearLayout1);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -266,16 +262,16 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void tvClicked() {
-        if (tvLogin.getText().toString().equals("Click Here")) {
-            tvLogin.setText("Login");
-            tvSentence.setText("Already Registered, ");
-            linerarLayout1.setVisibility(View.GONE);
-            cardView.setVisibility(View.VISIBLE);
-        } else if (tvLogin.getText().toString().equals("Login")) {
+    private void googleAuthToEmailAuthSwitch() {
+        if (LoginTV.getText().toString().equals("Click Here")) {
+            LoginTV.setText("Login");
+            sentenceTv.setText("Already Registered, ");
+            googleAuthLinearLayout.setVisibility(View.GONE);
+            signUPCardView.setVisibility(View.VISIBLE);
+        } else if (LoginTV.getText().toString().equals("Login")) {
             signInButton.setText("Login");
-            tvSentence.setVisibility(View.INVISIBLE);
-            tvLogin.setVisibility(View.INVISIBLE);
+            sentenceTv.setVisibility(View.INVISIBLE);
+            LoginTV.setVisibility(View.INVISIBLE);
         }
 
 
