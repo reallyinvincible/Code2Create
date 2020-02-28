@@ -88,5 +88,6 @@ The 2nd review is a technical review where you will be judged based on your impl
     <string name="register">Register</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
+    <string name="already_registered">Already Registered ?</string>
 
 </resources>

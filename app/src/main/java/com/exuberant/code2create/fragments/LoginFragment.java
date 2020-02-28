@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,7 +34,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -61,7 +64,7 @@ public class LoginFragment extends Fragment {
     private DatabaseReference mEmailReference;
     private DatabaseReference mScannablesReference;
     private DatabaseReference mAttendanceReference;
-    private static final int GOOGLE_SIGN_IN = 123;
+    public static final int GOOGLE_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final String TAG = "GoogleAuth";
@@ -108,19 +111,20 @@ public class LoginFragment extends Fragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    InputMethodManager imm = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    }
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.e("DISMISS KEYBOARD", "" + e.getMessage());
+                }
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                     String email = emailET.getText().toString();
                     String password = passwordET.getText().toString();
-                    try {
-                        InputMethodManager imm = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        }
-                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    } catch (Exception e) {
-                        Log.e("DISMISS KEYBOARD",""+e.getMessage());
-                    }
                     progressBar.setVisibility(View.VISIBLE);
+                    disableUserInteraction();
                     userLogin(email, password);
 
                 } else {
@@ -155,8 +159,6 @@ public class LoginFragment extends Fragment {
     }
 
     private void signIn() {
-        loginButton.setAlpha((float) 0.5);
-        progressBar.setVisibility(View.VISIBLE);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
@@ -187,7 +189,7 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
+                            enableUserInteraction();
                             Log.d(TAG, "signInWithCredential:success");
                             mAuth = FirebaseAuth.getInstance();
                             String email = mAuth.getCurrentUser().getEmail();
@@ -199,10 +201,28 @@ public class LoginFragment extends Fragment {
                             showConfirmationSnackbar("Sign In Success");
                         } else {
                             loginButton.setAlpha(1);
-                            progressBar.setVisibility(View.GONE);
+                            enableUserInteraction();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             showErrorSnackbar("Sign In Error, Contact the Admin");
                         }
+                    }
+                })
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        loginButton.setAlpha(1);
+                        enableUserInteraction();
+                        progressBar.setVisibility(View.GONE);
+                        showErrorSnackbar("Sign In Error, Contact the Admin");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loginButton.setAlpha(1);
+                        enableUserInteraction();
+                        progressBar.setVisibility(View.GONE);
+                        showErrorSnackbar("Sign In Error, Contact the Admin");
                     }
                 });
 
@@ -228,12 +248,14 @@ public class LoginFragment extends Fragment {
                         uid = mAuth.getUid();
                         mUserReference.child(uid).setValue(email);
                         progressBar.setVisibility(View.GONE);
+                        enableUserInteraction();
                         loginState = 1;
                         editor.putInt("loginState", loginState);
                         editor.apply();
                         showConfirmationSnackbar("Sign In Success");
                     } else {
                         progressBar.setVisibility(View.GONE);
+                        enableUserInteraction();
                         showErrorSnackbar("User does not exist in database");
                     }
                 }
@@ -260,16 +282,29 @@ public class LoginFragment extends Fragment {
                                 compareEmail(email);
                             } else {
                                 progressBar.setVisibility(View.GONE);
+                                enableUserInteraction();
                                 showErrorSnackbar("Email Not Verified, Check Your Inbox");
                             }
                         } else {
                             progressBar.setVisibility(View.GONE);
-                            showErrorSnackbar("User Not Registered");
+                            enableUserInteraction();
+                            showErrorSnackbar("User Not Registered ");
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }
                     }
                 });
     }
+
+    private void disableUserInteraction() {
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void enableUserInteraction() {
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+    }
+
 
     private void initializeView(View view) {
         constraintLayout = view.findViewById(R.id.cl_login);
@@ -298,6 +333,5 @@ public class LoginFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
     }
-
 
 }

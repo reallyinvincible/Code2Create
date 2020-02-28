@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +34,7 @@ public class SignUpFragment extends Fragment {
     private Button signUp;
     private FirebaseAuth mAuth;
     private String TAG = "ACM ROCKS";
+    private TextView tvLogin, tvSentence;
 
     @Nullable
     @Override
@@ -43,23 +46,31 @@ public class SignUpFragment extends Fragment {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    InputMethodManager imm = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    }
+                    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.e("DISMISS KEYBOARD", "" + e.getMessage());
+                }
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
+
                     String email = emailET.getText().toString();
                     String password = passwordET.getText().toString();
-                    try {
-                        InputMethodManager imm = null;
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        }
-                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    } catch (Exception e) {
-                        Log.e("DISMISS KEYBOARD",""+e.getMessage());
-                    }
                     userRegistration(email, password);
 
                 } else {
                     showErrorSnackbar("Email or password missing");
                 }
+            }
+        });
+
+        tvLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginActivity.getLoginActivityInterface().switchToLogin();
             }
         });
 
@@ -110,7 +121,20 @@ public class SignUpFragment extends Fragment {
                 });
     }
 
+    private void disableUserInteraction() {
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void enableUserInteraction() {
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+    }
+
+
     private void initializeView(View view) {
+        tvSentence = view.findViewById(R.id.tv_sentence);
+        tvLogin = view.findViewById(R.id.tv_login);
         signUp = view.findViewById(R.id.btn_sign_up);
         emailET = view.findViewById(R.id.et_email);
         passwordET = view.findViewById(R.id.et_password);
