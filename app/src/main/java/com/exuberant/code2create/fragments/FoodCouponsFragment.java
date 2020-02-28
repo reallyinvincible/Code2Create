@@ -45,6 +45,7 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import io.chirp.connect.ChirpConnect;
 import io.chirp.connect.interfaces.ConnectEventListener;
 import io.chirp.connect.models.ChirpError;
@@ -88,17 +89,19 @@ public class FoodCouponsFragment extends Fragment {
 
     private String email;
 
+    @Override
+    public void onAttach(@NonNull Context newContext) {
+        super.onAttach(newContext);
+        context=newContext;
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_coupons, container, false);
-        context = this.getContext();
-        initialiseViews(view);
 
-       /* sharedPreferences = getActivity().getSharedPreferences(getString(R.string.shared_prefs_name), Context.MODE_PRIVATE);
-        email = sharedPreferences.getString("email", null);
-        */
+        initialiseViews(view);
 
         //---------------------Initialise Chirp------------------------------
         chirp = new ChirpConnect(context, CHIRP_APP_KEY, CHIRP_APP_SECRET);
@@ -202,7 +205,7 @@ public class FoodCouponsFragment extends Fragment {
         cardView3 = view.findViewById(R.id.cv_coupon3);
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getUid();
-        foodContainer=view.findViewById(R.id.container_food);
+        foodContainer = view.findViewById(R.id.container_food);
 
         skeletonScreen1 = Skeleton.bind(cardView1)
                 .shimmer(true)
