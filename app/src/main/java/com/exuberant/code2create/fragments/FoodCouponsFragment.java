@@ -474,7 +474,7 @@ public class FoodCouponsFragment extends Fragment {
             Scannable scannable = scannableList.get(i);
             Date date = getDateObject(scannable.getScannableDate(), scannable.getScannableEndTime());
             if (compareDates(date) == -1) {
-                foodContainer.setBackground(Drawable.createFromPath("@drawable/ic_error"));
+                break;
             }
         }
 
