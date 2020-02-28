@@ -35,17 +35,17 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
+        app:iconTint="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="24dp"
         android:layout_marginTop="48dp"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
         android:text="@string/sign_in"
         android:textAllCaps="false"
-        android:textColor="#FFFFFF"
-        app:elevation="8dp"
+        android:textColor="@color/colorPrimaryDark"
         app:icon="@drawable/googleg_standard_color_18"
         app:iconGravity="textStart"
         app:iconPadding="10dp"
@@ -152,7 +152,7 @@
                 android:paddingBottom="12dp"
                 android:text="@string/login"
                 android:textAllCaps="false"
-                android:textColor="#303030" />
+                android:textColor="@color/colorPrimaryDark" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
