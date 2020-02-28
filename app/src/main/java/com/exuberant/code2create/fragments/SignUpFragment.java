@@ -23,9 +23,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.concurrent.Executor;
 
 public class SignUpFragment extends Fragment {
 
@@ -34,7 +31,7 @@ public class SignUpFragment extends Fragment {
     private String uid;
     private Button signUp;
     private FirebaseAuth mAuth;
-    private String TAG="ACM ROCKS";
+    private String TAG = "ACM ROCKS";
 
     @Nullable
     @Override
@@ -52,11 +49,11 @@ public class SignUpFragment extends Fragment {
                     try {
                         InputMethodManager imm = null;
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-                            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         }
                         imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                     } catch (Exception e) {
-                        // TODO: handle exception
+                        Log.e("DISMISS KEYBOARD",""+e.getMessage());
                     }
                     userRegistration(email, password);
 

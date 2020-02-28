@@ -80,8 +80,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         if (loginState == 1) {
-                launchHome();
-            }
+            launchHome();
+        }
     }
 
     @Override
@@ -113,7 +113,6 @@ public class LoginActivity extends AppCompatActivity {
                 fragmentTransition(fragmentStack.peek());
             }
         };
-
 
     }
 

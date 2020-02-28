@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -66,6 +67,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "GoogleAuth";
     private final static String SHA_SALT = "ACM_Rocks";
     private Integer loginState = 0;
+    private Boolean flag;
     private Button loginButton;
     private EditText emailET, passwordET;
     private ProgressBar progressBar;
@@ -91,11 +93,6 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         initializeView(view);
 
-
-        fetchList();
-
-        Log.d("SIZE", String.valueOf(registeredEmailList.size()));
-
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +100,6 @@ public class LoginFragment extends Fragment {
                 signIn();
             }
         });
-
 
         LoginTV.setOnClickListener(v -> {
             LoginActivity.getLoginActivityInterface().switchToSignUp();
@@ -115,6 +111,15 @@ public class LoginFragment extends Fragment {
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
                     String email = emailET.getText().toString();
                     String password = passwordET.getText().toString();
+                    try {
+                        InputMethodManager imm = null;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        }
+                        imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                    } catch (Exception e) {
+                        Log.e("DISMISS KEYBOARD",""+e.getMessage());
+                    }
                     progressBar.setVisibility(View.VISIBLE);
                     userLogin(email, password);
 
@@ -188,6 +193,9 @@ public class LoginFragment extends Fragment {
                             String email = mAuth.getCurrentUser().getEmail();
                             uid = mAuth.getUid();
                             mUserReference.child(uid).setValue(email);
+                            loginState = 1;
+                            editor.putInt("loginState", loginState);
+                            editor.apply();
                             showConfirmationSnackbar("Sign In Success");
                         } else {
                             loginButton.setAlpha(1);
@@ -202,21 +210,42 @@ public class LoginFragment extends Fragment {
 
 
     private void compareEmail(String email) {
-
-        for (int i = 0; i < registeredEmailList.size(); i++) {
-            if (String.valueOf(i).equals(email)) {
-                uid = mAuth.getUid();
-                mUserReference.child(uid).setValue(email);
-                loginState = 1;
-                editor.putInt("loginState", loginState);
-                editor.apply();
-                progressBar.setVisibility(View.GONE);
-                showConfirmationSnackbar("Sign In Success");
-            } else {
-                progressBar.setVisibility(View.GONE);
-                showErrorSnackbar("User does not exist in Database");
+        mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                flag = true;
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                        String registeredEmail = dataSnapshot1.getValue(String.class);
+                        if (registeredEmail.equals(email)) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        mAuth = FirebaseAuth.getInstance();
+                        String email = mAuth.getCurrentUser().getEmail();
+                        uid = mAuth.getUid();
+                        mUserReference.child(uid).setValue(email);
+                        progressBar.setVisibility(View.GONE);
+                        loginState = 1;
+                        editor.putInt("loginState", loginState);
+                        editor.apply();
+                        showConfirmationSnackbar("Sign In Success");
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        showErrorSnackbar("User does not exist in database");
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                showErrorSnackbar("Some Error Occured");
+            }
+        });
+
+
     }
 
     private void userLogin(String email, String password) {
@@ -231,7 +260,7 @@ public class LoginFragment extends Fragment {
                                 compareEmail(email);
                             } else {
                                 progressBar.setVisibility(View.GONE);
-                                showErrorSnackbar("Email Not Verified");
+                                showErrorSnackbar("Email Not Verified, Check Your Inbox");
                             }
                         } else {
                             progressBar.setVisibility(View.GONE);
@@ -268,25 +297,6 @@ public class LoginFragment extends Fragment {
 
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
-    }
-
-    private void fetchList() {
-        mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                        String registeredEmail = dataSnapshot1.getValue(String.class);
-                        registeredEmailList.add(registeredEmail);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
 
