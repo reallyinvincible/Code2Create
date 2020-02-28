@@ -26,6 +26,7 @@ import com.exuberant.code2create.interfaces.FragmentSwitchInterface;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -284,6 +285,8 @@ public class HomeActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.clear();
             editor.apply();
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
             finishAfterTransition();
         });

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Code2Create</string>
 
-    <string name="Rs12000">\u20B912000</string>
+    <string name="Rs35000">\u20B935000</string>
+    <string name="Rs15000">\u20B915000</string>
     <string name="Rs8000">\u20B98000</string>
-    <string name="R5000">\u20B95000</string>
-    <string name="Rs2500">\u20B92500</string>
+    <string name="Rs3000">\u20B93000</string>
+    <string name="Rs2000">\u20B92000</string>
 
     <string name="winner">Winner</string>
     <string name="best_ui_ux">Best UI/UX</string>
@@ -13,6 +14,7 @@
     <string name="prizes">Prizes</string>
     <string name="most_innovative">Innovative Idea</string>
     <string name="third_place">Third Place</string>
+    <string name="best_first_year">Best First Year</string>
 
     <string name="sponsors">Sponsors</string>
     <string name="without_them_all_of_this_wouldn_t_be_possible">Without them, all of this wouldn’t be possible</string>
@@ -39,9 +41,9 @@
     <string name="shared_prefs_wifi_coupon">wifiCoupon</string>
 
     <string name="acm_vit">ACM VIT</string>
-    <string name="about_acm_vit">Right from its inception in 2009, the ACM VIT Student Chapter has been organizing and conducting successful technical and professional development events. It hosted Compute 2013, the 6th ACM India Computing Convention from 22nd to 24th August 2013, as well as the first All India ACM Chapters Meet on 24th August 2013. It has credentials in web/mobile applications development and machine learning. The websites "All About VIT" and "VIT Cab Share" are some of the treasured creations of its core members. Technology is its cause and education its objective.</string>
+    <string name="about_acm_vit">Right from its inception in 2009, the ACM VIT Student Chapter has been organizing and conducting successful technical and professional development events. ACM-VIT is a non-profit organization of talented individuals specialising in several domains of technology like WebDev, AppDev, Machine Learning, AR/VR, CyberSec and many more. Technology is its cause and education its objective, which we achieve by conducting exciting and informative events all year round with Code2Create being our grandest event.</string>
     <string name="code2create">Code2Create</string>
-    <string name="about_code2create">A thrilling tech sprint awaited by numerous innovators, Code2Create witnesses a plethora of skill sets. Code2Create is all about designing, building and creating; a place where graphic designers, software developers, app developers, and web developers collaborate intensively on projects. Code2Create\'18 saw more than 500 participants. The judges were renowned experts in their respective fields. Participants from across the country indulge in 36 hours of intense brainstorming, designing, creating and testing, along with some engaging and very enjoyable side quests. Code2Create is ACM-VIT’s flagship event and one of the grandest annual events hosted in VIT.</string>
+    <string name="about_code2create">Code2Create is ACM-VIT’s flagship event and one of the grandest annual events hosted in VIT. A thrilling tech sprint awaited by numerous innovators, Code2Create witnesses a plethora of skill sets. Code2Create is a place where graphic designers, software developers, app and web developers collaborate intensively on projects. Participants from across the country indulge in 36 hours of intense brainstorming, designing, creating and testing, along with some engaging and very enjoyable side quests.</string>
 
     <!--FAQs start from here-->
     <string name="faq_q1">How do I submit my work?</string>
@@ -77,5 +79,14 @@ The 2nd review is a technical review where you will be judged based on your impl
 
     <string name="faq_q11">Who do I contact if I face any problems?</string>
     <string name="faq_a11">We have our organising team to assist you with any problems that you might face during the hackathon. You can call on any one of us, we will do our best to assist you.</string>
+    <string name="login_success">Sign In Success</string>
+    <string name="click_here">Click Here</string>
+    <string name="not_a_google_account">Not Registered ?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="sign_up">Sign Up</string>
 
 </resources>

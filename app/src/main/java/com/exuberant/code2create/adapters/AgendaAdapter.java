@@ -1,5 +1,6 @@
 package com.exuberant.code2create.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,13 @@ import android.widget.TextView;
 import com.exuberant.code2create.R;
 import com.exuberant.code2create.models.Agenda;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +42,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
         Agenda agenda = agendaList.get(position);
         holder.agendaTitle.setText(agenda.getAgendaTitle());
         holder.agendaTime.setText(agenda.getStartTime());
+
         switch (agenda.getType()) {
             case "reg":
                 holder.agendaImageView.setImageDrawable(holder.agendaImageView
@@ -72,12 +80,15 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
         ImageView agendaImageView;
         TextView agendaTitle;
         TextView agendaTime;
+        ImageView agendaIndicator;
 
         public AgendaAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             agendaImageView = itemView.findViewById(R.id.iv_agenda_icon);
             agendaTitle = itemView.findViewById(R.id.tv_agenda_title);
             agendaTime = itemView.findViewById(R.id.tv_agenda_time);
+            agendaIndicator=itemView.findViewById(R.id.iv_agenda_indicator);
+
         }
     }
 

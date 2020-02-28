@@ -3,15 +3,37 @@ package com.exuberant.code2create.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exuberant.code2create.R;
+import com.exuberant.code2create.fragments.LoginFragment;
+import com.exuberant.code2create.fragments.SignUpFragment;
+import com.exuberant.code2create.interfaces.LoginActivityInterface;
 import com.exuberant.code2create.models.Agenda;
 import com.exuberant.code2create.models.AgendaModel;
-import com.exuberant.code2create.models.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,34 +41,48 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
+import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
-import static com.exuberant.code2create.UtilsInterface.get_SHA_512_password;
+import static androidx.core.app.ActivityCompat.finishAfterTransition;
 import static com.exuberant.code2create.UtilsInterface.transformString;
 
 
 public class LoginActivity extends AppCompatActivity {
 
+    static LoginActivityInterface loginActivityInterface;
+    private FragmentManager mFragmentManager;
+    private Stack<Fragment> fragmentStack = new Stack<>();
+    private String TAG = "ACM";
+    private FirebaseAuth mAuth;
+    private FrameLayout mFrameLayout;
     SharedPreferences sharedPreferences;
+    Integer loginState;
 
-    FirebaseDatabase mDatabase;
-    DatabaseReference mUserReference;
-    DatabaseReference mAgendaReference;
-    DatabaseReference mScannablesReference;
-    DatabaseReference mAttendanceReference;
+    @Override
+    public void onBackPressed() {
+        if (fragmentStack.size() == 1) {
+            finish();
+        } else {
+            fragmentStack.pop();
+            fragmentTransition(fragmentStack.peek());
+        }
+    }
 
-    private final static String SHA_SALT = "ACM_Rocks";
+    @Override
+    protected void onStart() {
+        super.onStart();
 
-    Button loginButton;
-    EditText emailET, passwordET;
-
-    List<Agenda> agendaList;
-    AgendaModel model;
-
-    ConstraintLayout constraintLayout;
+        if (loginState == 1) {
+            launchHome();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,93 +90,61 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         initializeView();
+        fragmentTransition(new LoginFragment());
+        fragmentStack.push(new LoginFragment());
 
-        sharedPreferences = getSharedPreferences(getString(R.string.shared_prefs_name), MODE_PRIVATE);
-        if (sharedPreferences.contains(getString(R.string.shared_prefs_email))) {
-            launchHome();
-        }
-        loginButton.setOnClickListener(view -> {
-            if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
-                String email = emailET.getText().toString();
-                String password = passwordET.getText().toString();
-                checkUser(email, password);
-            } else {
-                showErrorSnackbar("Email or password missing");
-            }
-        });
-    }
-
-    void initializeView() {
-        constraintLayout = findViewById(R.id.cl_login);
-        loginButton = findViewById(R.id.btn_login);
-        emailET = findViewById(R.id.et_email);
-        passwordET = findViewById(R.id.et_password);
-        mDatabase = FirebaseDatabase.getInstance();
-        mAgendaReference = mDatabase.getReference().child("agendas");
-        mUserReference = mDatabase.getReference().child("users");
-        mScannablesReference = mDatabase.getReference().child("scannables");
-        mAttendanceReference = mScannablesReference.child("attendance");
-    }
-
-    void checkUser(String email, String password) {
-        String transformedEmail = transformString(email);
-        mUserReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        loginActivityInterface = new LoginActivityInterface() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(transformedEmail)) {
-                    try {
-                        User user = dataSnapshot.child(transformedEmail).getValue(User.class);
-                        if (password.equals(user.getPassword())) {
-                            saveUserInfo(email, user.getWifiCoupon());
-                            showConfirmationSnackbar("Logging you in!");
-                        } else {
-                            showErrorSnackbar("Incorrect Password!");
-                        }
-                    } catch (Exception e){
-                        showErrorSnackbar("Data cannot be processed. Contact your nearest volunteer.");
-                    }
-                } else {
-                    showErrorSnackbar("User not registered!!");
-                }
+            public void launchHome() {
+                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                finish();
+                startActivity(intent);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
+            public void switchToSignUp() {
+                fragmentStack.push(new SignUpFragment());
+                fragmentTransition(fragmentStack.peek());
             }
-        });
+
+            @Override
+            public void switchToLogin() {
+                fragmentStack.pop();
+                fragmentTransition(fragmentStack.peek());
+            }
+        };
 
     }
 
-    void saveUserInfo(String email, String wifiCoupon) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getString(R.string.shared_prefs_email), email);
-        editor.putString(getString(R.string.shared_prefs_transformed_email), transformString(email));
-        editor.putString(getString(R.string.shared_prefs_wifi_coupon), wifiCoupon);
-        editor.apply();
-    }
-
-    void launchHome() {
-        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+    public void launchHome() {
+        startActivity(new Intent(this, HomeActivity.class));
         finishAfterTransition();
     }
 
-    void showConfirmationSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorAccent);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar transientBottomBar, int event) {
-                launchHome();
-                finish();
-            }
-        });
-        snackbar.show();
+
+    void initializeView() {
+        mAuth = FirebaseAuth.getInstance();
+        mFrameLayout = findViewById(R.id.login_signup_frame);
+        mFragmentManager = getSupportFragmentManager();
+        sharedPreferences = getSharedPreferences("UserInfo", MODE_PRIVATE);
+        loginState = sharedPreferences.getInt("loginState", 0);
     }
 
-    void showErrorSnackbar(String message) {
-        Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
-        snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
-        snackbar.show();
+
+    private void fragmentTransition(Fragment fragment) {
+        fragment.setEnterTransition(new Fade());
+        fragment.setExitTransition(new Fade());
+        mFragmentManager.beginTransaction()
+                .replace(R.id.login_signup_frame, fragment)
+                .commit();
     }
+
+    public static LoginActivityInterface getLoginActivityInterface() {
+        return loginActivityInterface;
+    }
+
 }
+
+
+
+
