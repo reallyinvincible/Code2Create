@@ -88,6 +88,7 @@ public class FoodCouponsFragment extends Fragment {
 
     private String email;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
