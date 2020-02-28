@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -121,6 +122,7 @@ public class LoginFragment extends Fragment {
                         Log.e("DISMISS KEYBOARD",""+e.getMessage());
                     }
                     progressBar.setVisibility(View.VISIBLE);
+                    disableUserInteraction();
                     userLogin(email, password);
 
                 } else {
@@ -157,6 +159,7 @@ public class LoginFragment extends Fragment {
     private void signIn() {
         loginButton.setAlpha((float) 0.5);
         progressBar.setVisibility(View.VISIBLE);
+        disableUserInteraction();
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
@@ -188,6 +191,7 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressBar.setVisibility(View.GONE);
+                            enableUserInteraction();
                             Log.d(TAG, "signInWithCredential:success");
                             mAuth = FirebaseAuth.getInstance();
                             String email = mAuth.getCurrentUser().getEmail();
@@ -199,6 +203,7 @@ public class LoginFragment extends Fragment {
                             showConfirmationSnackbar("Sign In Success");
                         } else {
                             loginButton.setAlpha(1);
+                            enableUserInteraction();
                             progressBar.setVisibility(View.GONE);
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             showErrorSnackbar("Sign In Error, Contact the Admin");
@@ -228,12 +233,14 @@ public class LoginFragment extends Fragment {
                         uid = mAuth.getUid();
                         mUserReference.child(uid).setValue(email);
                         progressBar.setVisibility(View.GONE);
+                        enableUserInteraction();
                         loginState = 1;
                         editor.putInt("loginState", loginState);
                         editor.apply();
                         showConfirmationSnackbar("Sign In Success");
                     } else {
                         progressBar.setVisibility(View.GONE);
+                        enableUserInteraction();
                         showErrorSnackbar("User does not exist in database");
                     }
                 }
@@ -260,16 +267,29 @@ public class LoginFragment extends Fragment {
                                 compareEmail(email);
                             } else {
                                 progressBar.setVisibility(View.GONE);
+                                enableUserInteraction();
                                 showErrorSnackbar("Email Not Verified, Check Your Inbox");
                             }
                         } else {
                             progressBar.setVisibility(View.GONE);
+                            enableUserInteraction();
                             showErrorSnackbar("User Not Registered");
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }
                     }
                 });
     }
+
+    private void disableUserInteraction(){
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    private void enableUserInteraction(){
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+    }
+
 
     private void initializeView(View view) {
         constraintLayout = view.findViewById(R.id.cl_login);
@@ -298,6 +318,5 @@ public class LoginFragment extends Fragment {
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
     }
-
 
 }
