@@ -6,7 +6,6 @@
     android:layout_margin="4dp"
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="@color/colorPrimary"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <ImageView
