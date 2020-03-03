@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import com.acmvit.code2create.R;
 import com.acmvit.code2create.adapters.FaqsAdapter;
@@ -12,6 +14,7 @@ import com.acmvit.code2create.models.FaqsModel;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,9 +44,13 @@ public class FaqsFragment extends Fragment {
         faqsList.add(new FaqsModel(R.string.faq_q10,R.string.faq_a10));
         faqsList.add(new FaqsModel(R.string.faq_q11,R.string.faq_a11));
 
+        int resId = R.anim.list_item_animation;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(getContext(), resId);
+
         FaqsAdapter faqsAdapter = new FaqsAdapter(faqsList);
         faqsRecyclerView.setAdapter(faqsAdapter);
         faqsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        faqsRecyclerView.setLayoutAnimation(animation);
 
 
         return view;

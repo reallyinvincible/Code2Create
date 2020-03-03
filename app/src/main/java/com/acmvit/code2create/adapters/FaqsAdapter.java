@@ -19,6 +19,7 @@ public class FaqsAdapter extends RecyclerView.Adapter<FaqsAdapter.FaqsViewHolder
 
     private List<FaqsModel> list;
     private List<Boolean> isOpenList;
+    private int lastPosition = 0;
 
     public FaqsAdapter(List<FaqsModel> list) {
         this.list = list;
@@ -70,18 +71,21 @@ public class FaqsAdapter extends RecyclerView.Adapter<FaqsAdapter.FaqsViewHolder
         cv.setOnClickListener(view -> {
             if (isOpenList.get(position)) {
                 isOpenList.set(position, false);
-                notifyDataSetChanged();
+                notifyItemChanged(position);
             } else {
                 resetStates();
                 isOpenList.set(position, true);
-                notifyDataSetChanged();
+                notifyItemChanged(lastPosition);
+                notifyItemChanged(position);
             }
         });
-
     }
 
     private void resetStates() {
         for (int i = 0; i < isOpenList.size(); i++) {
+            if (isOpenList.get(i)){
+                lastPosition = i;
+            }
             isOpenList.set(i, false);
         }
     }
