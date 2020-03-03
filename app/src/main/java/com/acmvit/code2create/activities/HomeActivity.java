@@ -1,6 +1,5 @@
 package com.acmvit.code2create.activities;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +10,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.transition.Fade;
 
 import com.acmvit.code2create.R;
 import com.acmvit.code2create.bottomsheets.WiFiDetailsBottomSheet;
@@ -27,18 +32,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.transition.Fade;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -143,8 +136,6 @@ public class HomeActivity extends AppCompatActivity {
         agendaImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_agenda_tint));
         agendaTextView.setTextColor(getResources().getColor(R.color.colorAccent));
         fragmentSwitchInterface.switchToAgenda();
-
-        requestMicrophonePermissions();
     }
 
     void switchFragment(Fragment fragment) {
@@ -195,14 +186,12 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                viewShadow.setVisibility(View.VISIBLE);
             }
         });
 
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                viewShadow.setVisibility(View.INVISIBLE);
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
@@ -313,30 +302,6 @@ public class HomeActivity extends AppCompatActivity {
         sponsorsTextView.setTextColor(getResources().getColor(R.color.textColor));
         wifiButton.setIcon(getResources().getDrawable(R.drawable.ic_wifi));
         alertButton.setIcon(getResources().getDrawable(R.drawable.ic_alert_outlined));
-    }
-
-    void requestMicrophonePermissions() {
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.RECORD_AUDIO)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-//                        Toast.makeText(HomeActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
-                        couponsContainer.setEnabled(true);
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(HomeActivity.this, "Please Enable Audio Permission & Restart the App", Toast.LENGTH_LONG).show();
-                        couponsContainer.setEnabled(false);
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                })
-                .check();
     }
 
     private boolean doubleBackToExitPressedOnce = false;

@@ -54,6 +54,7 @@ public class AlertFragment extends Fragment {
         alertReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                alertList.clear();
                 for (DataSnapshot data : dataSnapshot.getChildren()){
                     Alert alert = data.getValue(Alert.class);
                     alertList.add(alert);

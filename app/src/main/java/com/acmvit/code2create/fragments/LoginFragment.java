@@ -131,16 +131,20 @@ public class LoginFragment extends Fragment {
     }
 
     private void resendEmailSnackbar(){
-        Snackbar snackbar = Snackbar.make(getView(),"You do not seem to have verified your email, do you want us to send the link again ", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(getView(),"You do not seem to have verified your email", Snackbar.LENGTH_LONG);
         snackbar.setAction("RESEND LINK", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.getCurrentUser().reload();{
                     mAuth.getCurrentUser().sendEmailVerification();
+                    Snackbar snackbar = Snackbar.make(constraintLayout, "Verification email sent", Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundResource(R.color.colorAccent);
+                    snackbar.show();
                 }
             }
         });
         snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
+        snackbar.show();
     }
 
 
@@ -259,7 +263,7 @@ public class LoginFragment extends Fragment {
                     } else {
                         progressBar.setVisibility(View.GONE);
                         enableUserInteraction();
-                        showErrorSnackbar("User does not exist in database");
+                        showErrorSnackbar("User RSVP not received. Contact nearest organiser.");
                     }
                 }
             }

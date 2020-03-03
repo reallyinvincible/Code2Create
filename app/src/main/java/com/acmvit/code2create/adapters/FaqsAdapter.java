@@ -23,7 +23,7 @@ public class FaqsAdapter extends RecyclerView.Adapter<FaqsAdapter.FaqsViewHolder
     public FaqsAdapter(List<FaqsModel> list) {
         this.list = list;
         isOpenList = new ArrayList<>();
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             isOpenList.add(false);
         }
     }
@@ -68,15 +68,20 @@ public class FaqsAdapter extends RecyclerView.Adapter<FaqsAdapter.FaqsViewHolder
 
     private void changeState(CardView cv, int position) {
         cv.setOnClickListener(view -> {
-            resetStates();
-            isOpenList.set(position, true);
-            notifyDataSetChanged();
+            if (isOpenList.get(position)) {
+                isOpenList.set(position, false);
+                notifyDataSetChanged();
+            } else {
+                resetStates();
+                isOpenList.set(position, true);
+                notifyDataSetChanged();
+            }
         });
 
     }
 
     private void resetStates() {
-        for(int i = 0; i < isOpenList.size(); i++){
+        for (int i = 0; i < isOpenList.size(); i++) {
             isOpenList.set(i, false);
         }
     }
