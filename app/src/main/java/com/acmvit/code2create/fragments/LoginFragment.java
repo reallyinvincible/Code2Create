@@ -130,6 +130,20 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    private void resendEmailSnackbar(){
+        Snackbar snackbar = Snackbar.make(getView(),"You do not seem to have verified your email, do you want us to send the link again ", Snackbar.LENGTH_LONG);
+        snackbar.setAction("RESEND LINK", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.getCurrentUser().reload();{
+                    mAuth.getCurrentUser().sendEmailVerification();
+                }
+            }
+        });
+        snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
+    }
+
+
 
     void showConfirmationSnackbar(String message) {
         Snackbar snackbar = Snackbar.make(constraintLayout, message, Snackbar.LENGTH_SHORT);
@@ -187,16 +201,12 @@ public class LoginFragment extends Fragment {
                             mAuth = FirebaseAuth.getInstance();
                             String email = mAuth.getCurrentUser().getEmail();
                             uid = mAuth.getUid();
-                            mUserReference.child(uid).setValue(email);
-                            loginState = 1;
-                            editor.putInt("loginState", loginState);
-                            editor.apply();
-                            showConfirmationSnackbar("Sign In Success");
+                            compareEmail(email);
                         } else {
                             loginButton.setAlpha(1);
                             enableUserInteraction();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            showErrorSnackbar("Sign In Error, Contact the Admin");
+                            showErrorSnackbar("Sign In Error, Check Your Internet Connection or Contact the Admin");
                         }
                     }
                 })
@@ -263,6 +273,8 @@ public class LoginFragment extends Fragment {
 
     }
 
+
+
     private void userLogin(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -276,7 +288,7 @@ public class LoginFragment extends Fragment {
                             } else {
                                 progressBar.setVisibility(View.GONE);
                                 enableUserInteraction();
-                                showErrorSnackbar("Email Not Verified, Check Your Inbox");
+                                resendEmailSnackbar();
                             }
                         } else {
                             progressBar.setVisibility(View.GONE);
