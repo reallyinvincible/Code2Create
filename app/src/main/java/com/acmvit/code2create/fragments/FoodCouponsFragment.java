@@ -126,14 +126,7 @@ public class FoodCouponsFragment extends Fragment {
                     return;
                 }
                 if (bypassedKey.equals(currentScannable.getScannableKey())) {
-                    if (currentUserList == null) {
-                        currentUserList = new HashSet<>();
-                        currentUserList.add(uid);
-                    } else if (!currentUserList.contains(uid)) {
-                        currentUserList.add(uid);
-                    } else if (currentUserList.contains(uid)) {
-                        Toast.makeText(context, "Already Scanned!", Toast.LENGTH_SHORT).show();
-                    }
+                    checkAttendance(bypassedKey);
 
                     if (titleCoupon1.getText().toString().equals(currentScannable.getScannableTitle())) {
                         setRedeemedState(statusCoupon1);
