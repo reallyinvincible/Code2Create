@@ -242,7 +242,7 @@ public class FoodCouponsFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance();
         mScannablesReference = mDatabase.getReference().child("scannables").child("list");
-        mAttendanceReference = mDatabase.getReference().child("scannables").child("attendance");
+        mAttendanceReference = mDatabase.getReference().child("scannables").child("attendances");
     }
 
     @Override
