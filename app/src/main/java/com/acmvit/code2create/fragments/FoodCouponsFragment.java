@@ -239,21 +239,6 @@ public class FoodCouponsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-            if (chirp != null) {
-                ChirpError error = chirp.start();
-                if (error.getCode() > 0) {
-                    Log.e("ChirpError: ", error.getMessage());
-                } else {
-                    Log.v("ChirpSDK: ", "Started ChirpSDK");
-                }
-            }
-        }
-    }
-
-    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case RESULT_REQUEST_RECORD_AUDIO: {
