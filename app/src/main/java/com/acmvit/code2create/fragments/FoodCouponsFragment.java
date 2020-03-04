@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +78,7 @@ public class FoodCouponsFragment extends Fragment {
     private Context context;
 
     private LottieAnimationView ripple;
+    private Button btnAudio;
     private TextView somethingWrong;
     private TextView titleCoupon1, titleCoupon2, titleCoupon3;
     private TextView timeCoupon1, timeCoupon2, timeCoupon3;
@@ -108,6 +110,7 @@ public class FoodCouponsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_food_coupons, container, false);
+
         initialiseViews(view);
 
         chirp = new ChirpConnect(context, CHIRP_APP_KEY, CHIRP_APP_SECRET);
@@ -154,6 +157,15 @@ public class FoodCouponsFragment extends Fragment {
             bottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "AdminBypass");
         });
 
+        btnAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(chirp.getState().toString().equals("CHIRP_CONNECT_STATE_RUNNING")){
+                    stopChirpAndRipple();
+                }
+            }
+        });
+
 
         mScannablesReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -188,6 +200,7 @@ public class FoodCouponsFragment extends Fragment {
 
     private void initialiseViews(View view) {
         ripple = view.findViewById(R.id.lav_ripple);
+        btnAudio=view.findViewById(R.id.btn_audio);
         titleCoupon1 = view.findViewById(R.id.tv_title_coupon1);
         titleCoupon2 = view.findViewById(R.id.tv_title_coupon2);
         titleCoupon3 = view.findViewById(R.id.tv_title_coupon3);
@@ -277,6 +290,7 @@ public class FoodCouponsFragment extends Fragment {
             ripple.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT));
             ripple.playAnimation();
             chirp.start();
+            Log.d("CHIRP",chirp.getState()+"");
             ConnectEventListener chirpEventListener = new ConnectEventListener() {
 
                 @Override
@@ -603,5 +617,11 @@ public class FoodCouponsFragment extends Fragment {
             default:
                 imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_info));
         }
+    }
+
+    public void stopChirpAndRipple(){
+        ripple.pauseAnimation();
+        ripple.setProgress(0);
+        chirp.stop();
     }
 }
