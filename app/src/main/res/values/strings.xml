@@ -53,7 +53,7 @@
     <string name="faq_a2">The Intellectual Property Rights belong solely to your team until your team decides to enter into an agreement with a third party company in which case the Intellectual Property Rights will be divided equally between the company(Party 1) and your team(Party 2).</string>
 
     <string name="faq_q3">How many reviews will be there?</string>
-    <string name="faq_a3">There will be two reviews. After the second review we will have eliminations based on the results of the first two reviews.</string>
+    <string name="faq_a3">here will be two elimination rounds - On 8th and 9th respectively. The top 6 teams will get a chance to present their hack in the final Expo.</string>
 
     <string name="faq_q4">What is the weightage of each review?</string>
     <string name="faq_a4">For the 1st review we will make note of your chosen track with understanding and innovation you have shown related to the chosen problem statement.
@@ -63,22 +63,22 @@ The 2nd review is a technical review where you will be judged based on your impl
     <string name="faq_a5">Yes you will get loads of yummy food to fill your bellies with!</string>
 
     <string name="faq_q6">What do I do if I want to rest?</string>
-    <string name="faq_a6">We have a lounge in the CS Hall for the participants to relax. Just ask any of the volunteers around and they will guide you to the place. You are welcome to rest on the mattresses and beanbags provided in the lounge, or even participate in one of the many fun activities to refresh your mind.</string>
+    <string name="faq_a6">You can relax in CS Hall and participate in one of the many fun activities to refresh your mind.</string>
 
     <string name="faq_q7">Who is on the Judging Panel?</string>
-    <string name="faq_a7">There will be 6 judges forming 3 panels of 2 judges each.</string>
+    <string name="faq_a7">There will be one judging panel comprising of three judges.</string>
 
     <string name="faq_q8">Can we work on our own problem statements?</string>
     <string name="faq_a8">Of course! As long as your problem statement is relevant to one of the tracks provided, you are free to work on any problem statement to your liking.</string>
 
     <string name="faq_q9">What do I do if I need an internet connection?</string>
-    <string name="faq_a9">You will be provided with free access to our beloved internet facility, VOLSBB. If you have any issues with the internet contact any of our organisers for assistance.</string>
+    <string name="faq_a9">You will be provided with free access to our beloved internet facility, VOLSBB.</string>
 
     <string name="faq_q10">What will we be judging criterion?</string>
     <string name="faq_a10">The criterion for evaluations are: Simplicity, Design, Solution to real time problem, Technology and Feasibility as a product.</string>
 
     <string name="faq_q11">Who do I contact if I face any problems?</string>
-    <string name="faq_a11">We have our organising team to assist you with any problems that you might face during the hackathon. You can call on any one of us, we will do our best to assist you.</string>
+    <string name="faq_a11">You can call anyone from the organizing team. We will be happy to help!</string>
     <string name="login_success">Sign In Success</string>
     <string name="click_here">Click Here</string>
     <string name="not_a_google_account">Not Registered ?</string>

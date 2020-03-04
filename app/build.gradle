@@ -3,13 +3,21 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('E:\\DevCourse\\CollabProjects\\Code2Create\\Code2Create.jks')
+            storePassword 'acmvit'
+            keyAlias = 'key0'
+            keyPassword 'acmvit'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.acmvit.code2create"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

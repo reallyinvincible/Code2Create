@@ -53,10 +53,7 @@ public class LoginFragment extends Fragment {
 
     private FirebaseDatabase mDatabase;
     private DatabaseReference mUserReference;
-    private DatabaseReference mAgendaReference;
     private DatabaseReference mEmailReference;
-    private DatabaseReference mScannablesReference;
-    private DatabaseReference mAttendanceReference;
     public static final int GOOGLE_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
@@ -69,14 +66,10 @@ public class LoginFragment extends Fragment {
     private ProgressBar progressBar;
     private String uid;
     private TextView LoginTV, sentenceTv;
-    private LinearLayout googleAuthLinearLayout;
     private Button signInButton;
-    private List<Agenda> agendaList;
-    private AgendaModel model;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     ConstraintLayout constraintLayout;
-    private ArrayList<String> registeredEmailList;
 
     public LoginFragment() {
 
@@ -155,7 +148,6 @@ public class LoginFragment extends Fragment {
         snackbar.addCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
-
                 LoginActivity.getLoginActivityInterface().launchHome();
                 getActivity().finish();
             }
@@ -182,10 +174,12 @@ public class LoginFragment extends Fragment {
         if (requestCode == GOOGLE_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
+                progressBar.setVisibility(View.VISIBLE);
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) firebaseAuthWithGoogle(account);
                 Log.e(TAG, "Google Sign In successful with Account Id" + account);
             } catch (ApiException e) {
+                progressBar.setVisibility(View.GONE);
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
@@ -208,6 +202,7 @@ public class LoginFragment extends Fragment {
                             compareEmail(email);
                         } else {
                             loginButton.setAlpha(1);
+                            progressBar.setVisibility(View.GONE);
                             enableUserInteraction();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             showErrorSnackbar("Sign In Error, Check Your Internet Connection or Contact the Admin");
@@ -237,6 +232,7 @@ public class LoginFragment extends Fragment {
 
 
     private void compareEmail(String email) {
+        progressBar.setVisibility(View.VISIBLE);
         mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -259,8 +255,10 @@ public class LoginFragment extends Fragment {
                         loginState = 1;
                         editor.putInt("loginState", loginState);
                         editor.apply();
+                        progressBar.setVisibility(View.GONE);
                         showConfirmationSnackbar("Sign In Success");
                     } else {
+                        progressBar.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         enableUserInteraction();
                         showErrorSnackbar("User RSVP not received. Contact nearest organiser.");
@@ -318,7 +316,6 @@ public class LoginFragment extends Fragment {
     private void initializeView(View view) {
         constraintLayout = view.findViewById(R.id.cl_login);
         loginButton = view.findViewById(R.id.btn_login);
-        registeredEmailList = new ArrayList<>();
         emailET = view.findViewById(R.id.et_email);
         passwordET = view.findViewById(R.id.et_password);
         LoginTV = view.findViewById(R.id.tv_login);
@@ -328,10 +325,7 @@ public class LoginFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         mDatabase = FirebaseDatabase.getInstance();
         mEmailReference = mDatabase.getReference().child("registeredEmails");
-        mAgendaReference = mDatabase.getReference().child("agendas");
         mUserReference = mDatabase.getReference().child("users");
-        mScannablesReference = mDatabase.getReference().child("scannables");
-        mAttendanceReference = mScannablesReference.child("attendance");
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
