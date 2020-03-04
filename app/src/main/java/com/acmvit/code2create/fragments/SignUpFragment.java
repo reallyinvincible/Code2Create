@@ -3,6 +3,7 @@ package com.acmvit.code2create.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +58,13 @@ public class SignUpFragment extends Fragment {
                 }
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
 
-                    String email = emailET.getText().toString();
-                    String password = passwordET.getText().toString();
-                    userRegistration(email, password);
+                    if (Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()) {
+                        String email = emailET.getText().toString();
+                        String password = passwordET.getText().toString();
+                        userRegistration(email, password);
+                    } else {
+                        showErrorSnackbar("Email format is invalid");
+                    }
 
                 } else {
                     showErrorSnackbar("Email or password missing");
@@ -108,7 +113,7 @@ public class SignUpFragment extends Fragment {
                                     }
                                 }
                             });
-                            Snackbar snackbar = Snackbar.make(getView(), "User Registered", Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar = Snackbar.make(getView(), "User Registered Successfully", Snackbar.LENGTH_SHORT);
                             snackbar.getView().setBackgroundResource(R.color.colorAccent);
                             snackbar.addCallback(new Snackbar.Callback() {
                                 @Override
