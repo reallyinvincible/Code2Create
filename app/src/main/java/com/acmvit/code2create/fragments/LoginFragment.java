@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,12 +108,16 @@ public class LoginFragment extends Fragment {
                     Log.e("DISMISS KEYBOARD", "" + e.getMessage());
                 }
                 if (emailET.getText() != null && emailET.getText().length() > 0 && passwordET.getText() != null && passwordET.getText().length() > 0) {
-                    String email = emailET.getText().toString();
-                    String password = passwordET.getText().toString();
-                    progressBar.setVisibility(View.VISIBLE);
-                    disableUserInteraction();
-                    userLogin(email, password);
 
+                    if (Patterns.EMAIL_ADDRESS.matcher(emailET.getText().toString()).matches()) {
+                        String email = emailET.getText().toString();
+                        String password = passwordET.getText().toString();
+                        progressBar.setVisibility(View.VISIBLE);
+                        disableUserInteraction();
+                        userLogin(email, password);
+                    } else {
+                        showErrorSnackbar("Email format in invalid");
+                    }
                 } else {
                     showErrorSnackbar("Email or password missing");
                 }
@@ -123,12 +128,13 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-    private void resendEmailSnackbar(){
-        Snackbar snackbar = Snackbar.make(getView(),"You do not seem to have verified your email", Snackbar.LENGTH_LONG);
+    private void resendEmailSnackbar() {
+        Snackbar snackbar = Snackbar.make(getView(), "You do not seem to have verified your email", Snackbar.LENGTH_LONG);
         snackbar.setAction("RESEND LINK", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.getCurrentUser().reload();{
+                mAuth.getCurrentUser().reload();
+                {
                     mAuth.getCurrentUser().sendEmailVerification();
                     Snackbar snackbar = Snackbar.make(constraintLayout, "Verification email sent", Snackbar.LENGTH_SHORT);
                     snackbar.getView().setBackgroundResource(R.color.colorAccent);
@@ -139,7 +145,6 @@ public class LoginFragment extends Fragment {
         snackbar.getView().setBackgroundResource(R.color.colorErrorSnackbar);
         snackbar.show();
     }
-
 
 
     void showConfirmationSnackbar(String message) {
@@ -274,7 +279,6 @@ public class LoginFragment extends Fragment {
 
 
     }
-
 
 
     private void userLogin(String email, String password) {
