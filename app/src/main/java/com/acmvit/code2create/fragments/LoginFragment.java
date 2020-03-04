@@ -295,7 +295,7 @@ public class LoginFragment extends Fragment {
                         } else {
                             progressBar.setVisibility(View.GONE);
                             enableUserInteraction();
-                            showErrorSnackbar("User Not Registered ");
+                            showErrorSnackbar("User Not Registered");
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }
                     }

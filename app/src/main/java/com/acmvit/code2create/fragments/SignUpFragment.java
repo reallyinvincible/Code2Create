@@ -115,7 +115,7 @@ public class SignUpFragment extends Fragment {
                             });
                             snackbar.show();
                         } else {
-                            showErrorSnackbar("User Already Registered");
+                            showErrorSnackbar(task.getException().getMessage());
                         }
                     }
                 });
