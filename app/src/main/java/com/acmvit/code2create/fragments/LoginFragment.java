@@ -175,11 +175,13 @@ public class LoginFragment extends Fragment {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 progressBar.setVisibility(View.VISIBLE);
+                disableUserInteraction();
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) firebaseAuthWithGoogle(account);
                 Log.e(TAG, "Google Sign In successful with Account Id" + account);
             } catch (ApiException e) {
                 progressBar.setVisibility(View.GONE);
+                enableUserInteraction();
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
@@ -233,6 +235,7 @@ public class LoginFragment extends Fragment {
 
     private void compareEmail(String email) {
         progressBar.setVisibility(View.VISIBLE);
+        disableUserInteraction();
         mEmailReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -256,9 +259,9 @@ public class LoginFragment extends Fragment {
                         editor.putInt("loginState", loginState);
                         editor.apply();
                         progressBar.setVisibility(View.GONE);
+                        enableUserInteraction();
                         showConfirmationSnackbar("Sign In Success");
                     } else {
-                        progressBar.setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         enableUserInteraction();
                         showErrorSnackbar("User RSVP not received. Contact nearest organiser.");
