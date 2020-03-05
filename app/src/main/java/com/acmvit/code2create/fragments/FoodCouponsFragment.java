@@ -593,7 +593,7 @@ public class FoodCouponsFragment extends Fragment {
 
     private void setAttendance(String scannableId) {
         mAttendanceReference.child(scannableId).child("couponUidList").child(uid).setValue(email);
-        String message = "Successfully Scanned. Enjoy your meal!";
+        String message = "Successfully scanned. Enjoy your meal!";
         if (currentScannable.getScannableType().equals("reg")){
             message = "Successfully Registered";
         }

@@ -85,11 +85,14 @@ public class SignUpFragment extends Fragment {
     }
 
     private void userRegistration(String email, String password) {
-
+        progressBar.setVisibility(View.VISIBLE);
+        disableUserInteraction();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        enableUserInteraction();
+                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
@@ -97,11 +100,11 @@ public class SignUpFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Snackbar snackbar = Snackbar.make(getView(), "Verification Link Sent to your Email Id", Snackbar.LENGTH_SHORT);
+                                        Snackbar snackbar = Snackbar.make(getView(), "Verification link sent to your email id", Snackbar.LENGTH_SHORT);
                                         snackbar.getView().setBackgroundResource(R.color.colorAccent);
                                         snackbar.show();
                                     } else {
-                                        showErrorSnackbar("Error While Sending Verification Link");
+                                        showErrorSnackbar("Error while sending verification link");
                                     }
                                 }
                             });

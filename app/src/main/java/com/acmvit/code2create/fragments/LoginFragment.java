@@ -58,7 +58,6 @@ public class LoginFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final String TAG = "GoogleAuth";
-    private final static String SHA_SALT = "ACM_Rocks";
     private Integer loginState = 0;
     private Boolean flag;
     private Button loginButton;
@@ -178,7 +177,7 @@ public class LoginFragment extends Fragment {
                 disableUserInteraction();
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) firebaseAuthWithGoogle(account);
-                Log.e(TAG, "Google Sign In successful with Account Id" + account);
+                Log.e(TAG, "Google sign in successful with account id" + account);
             } catch (ApiException e) {
                 progressBar.setVisibility(View.GONE);
                 enableUserInteraction();
@@ -207,7 +206,7 @@ public class LoginFragment extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             enableUserInteraction();
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            showErrorSnackbar("Sign In Error, Check Your Internet Connection or Contact the Admin");
+                            showErrorSnackbar("Sign in error! Check your internet connection or contact nearest organiser.");
                         }
                     }
                 })
@@ -217,7 +216,7 @@ public class LoginFragment extends Fragment {
                         loginButton.setAlpha(1);
                         enableUserInteraction();
                         progressBar.setVisibility(View.GONE);
-                        showErrorSnackbar("Sign In Error, Contact the Admin");
+                        showErrorSnackbar("Sign in error! Contact nearest organiser.");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -226,7 +225,7 @@ public class LoginFragment extends Fragment {
                         loginButton.setAlpha(1);
                         enableUserInteraction();
                         progressBar.setVisibility(View.GONE);
-                        showErrorSnackbar("Sign In Error, Contact the Admin");
+                        showErrorSnackbar("Sign in error! Contact nearest organiser.");
                     }
                 });
 
@@ -271,7 +270,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                showErrorSnackbar("Some Error Occured");
+                showErrorSnackbar("Database error occurred. Please try again.");
             }
         });
 
@@ -335,7 +334,6 @@ public class LoginFragment extends Fragment {
                 .build();
         sharedPreferences = getActivity().getSharedPreferences("UserInfo", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
     }
