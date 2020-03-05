@@ -129,7 +129,6 @@ public class FoodCouponsFragment extends Fragment {
                     return;
                 }
                 if (bypassedKey.equals(currentScannable.getScannableKey())) {
-                    checkAttendance(bypassedKey);
 
                     if (titleCoupon1.getText().toString().equals(currentScannable.getScannableTitle())) {
                         setRedeemedState(statusCoupon1);
