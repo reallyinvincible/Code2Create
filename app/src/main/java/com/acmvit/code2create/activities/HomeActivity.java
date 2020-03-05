@@ -1,7 +1,5 @@
 package com.acmvit.code2create.activities;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.transition.Fade;
@@ -345,10 +342,10 @@ public class HomeActivity extends AppCompatActivity {
         }, 2000);
     }
 
-    private void setupNetworkListener(){
+    private void setupNetworkListener() {
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback(){
+        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
                 getFragmentSwitchInterface().hideInternetCard();
@@ -369,7 +366,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void showInternetCard(){
+    private void showInternetCard() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -378,7 +375,7 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void hideInternetCard(){
+    private void hideInternetCard() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
