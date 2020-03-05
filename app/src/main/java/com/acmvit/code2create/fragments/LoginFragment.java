@@ -259,7 +259,7 @@ public class LoginFragment extends Fragment {
                         editor.apply();
                         progressBar.setVisibility(View.GONE);
                         enableUserInteraction();
-                        showConfirmationSnackbar("Sign In Success");
+                        showConfirmationSnackbar("Sign in success");
                     } else {
                         progressBar.setVisibility(View.GONE);
                         enableUserInteraction();
@@ -297,7 +297,7 @@ public class LoginFragment extends Fragment {
                         } else {
                             progressBar.setVisibility(View.GONE);
                             enableUserInteraction();
-                            showErrorSnackbar("User Not Registered");
+                            showErrorSnackbar(task.getException().getMessage());
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }
                     }

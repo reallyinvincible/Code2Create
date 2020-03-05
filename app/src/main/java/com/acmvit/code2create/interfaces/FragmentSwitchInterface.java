@@ -10,4 +10,6 @@ public interface FragmentSwitchInterface {
     void switchToError();
     void switchToAlerts();
     void openWiFiBottomSheet();
+    void showInternetCard();
+    void hideInternetCard();
 }

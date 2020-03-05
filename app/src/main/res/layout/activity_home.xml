@@ -4,14 +4,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/colorPrimaryDark"
     tools:context=".activities.HomeActivity">
 
-    <FrameLayout
-        android:id="@+id/fl_fragment_container"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="42dp" />
+        android:layout_gravity="center"
+        android:gravity="center|top"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_no_internet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#656565"
+            android:baselineAligned="false"
+            android:padding="8dp"
+            android:text="You seem to have no internet connectivity"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <FrameLayout
+            android:id="@+id/fl_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="42dp" />
+
+    </LinearLayout>
+
+    <!-- <FrameLayout
+         app:layout_anchor="@id/cv_internet_lost"
+         android:id="@+id/fl_fragment_container"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_marginBottom="42dp" />-->
 
     <View
         android:id="@+id/view_shadow"

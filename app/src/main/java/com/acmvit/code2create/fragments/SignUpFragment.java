@@ -108,7 +108,7 @@ public class SignUpFragment extends Fragment {
                                     }
                                 }
                             });
-                            Snackbar snackbar = Snackbar.make(getView(), "User Registered", Snackbar.LENGTH_SHORT);
+                            Snackbar snackbar = Snackbar.make(getView(), "User registered", Snackbar.LENGTH_SHORT);
                             snackbar.getView().setBackgroundResource(R.color.colorAccent);
                             snackbar.addCallback(new Snackbar.Callback() {
                                 @Override

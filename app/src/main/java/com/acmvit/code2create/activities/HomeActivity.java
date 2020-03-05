@@ -1,7 +1,13 @@
 package com.acmvit.code2create.activities;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.transition.Fade;
@@ -42,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     View viewShadow;
     private LinearLayout aboutContainer, agendaContainer, faqContainer, couponsContainer, prizesContainer, sponsorsContainer, logoutContainer;
     private ImageView aboutImageView, agendaImageView, faqImageView, couponsImageView, prizesImageView, sponsorsImageView;
-    private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView;
+    private TextView aboutTextView, agendaTextView, faqTextView, couponsTextView, prizesTextView, sponsorsTextView, noInternetTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         initializeViews();
+
+        setupNetworkListener();
 
         fragmentSwitchInterface = new FragmentSwitchInterface() {
             @Override
@@ -97,6 +106,16 @@ public class HomeActivity extends AppCompatActivity {
             public void openWiFiBottomSheet() {
                 BottomSheetDialogFragment wifiBottomSheet = new WiFiDetailsBottomSheet();
                 wifiBottomSheet.show(getSupportFragmentManager(), "WiFi Details");
+            }
+
+            @Override
+            public void showInternetCard() {
+                HomeActivity.this.showInternetCard();
+            }
+
+            @Override
+            public void hideInternetCard() {
+                HomeActivity.this.hideInternetCard();
             }
         };
 
@@ -167,6 +186,7 @@ public class HomeActivity extends AppCompatActivity {
         faqContainer = findViewById(R.id.ll_faqs_container);
         faqImageView = findViewById(R.id.iv_faqs);
         faqTextView = findViewById(R.id.tv_faqs);
+        noInternetTextView = findViewById(R.id.tv_no_internet);
         couponsContainer = findViewById(R.id.ll_coupons_container);
         couponsImageView = findViewById(R.id.iv_coupons);
         couponsTextView = findViewById(R.id.tv_coupons);
@@ -323,5 +343,47 @@ public class HomeActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce = false;
             }
         }, 2000);
+    }
+
+    private void setupNetworkListener(){
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback(){
+            @Override
+            public void onAvailable(Network network) {
+                getFragmentSwitchInterface().hideInternetCard();
+            }
+
+            @Override
+            public void onLost(Network network) {
+                getFragmentSwitchInterface().showInternetCard();
+            }
+
+            @Override
+            public void onUnavailable() {
+                getFragmentSwitchInterface().showInternetCard();
+            }
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            cm.registerDefaultNetworkCallback(networkCallback);
+        }
+    }
+
+    private void showInternetCard(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                noInternetTextView.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void hideInternetCard(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                noInternetTextView.setVisibility(View.GONE);
+            }
+        });
     }
 }
