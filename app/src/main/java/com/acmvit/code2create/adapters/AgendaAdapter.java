@@ -65,18 +65,18 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
                         .getContext().getResources().getDrawable(R.drawable.ic_default));
         }
 
-        Date startDate=UtilsInterface.getDateObject(agenda.getDate(),agenda.getStartTime());
-        Date endDate=UtilsInterface.getDateObject(agenda.getDate(),agenda.getEndTime());
-        int var1=UtilsInterface.compareDates(startDate);
-        int var2=UtilsInterface.compareDates(endDate);
-        if(var1>=1 && var2<1){
+        Date startDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getStartTime());
+        Date endDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getEndTime());
+        int var1 = UtilsInterface.compareDates(startDate);
+        int var2 = UtilsInterface.compareDates(endDate);
+        if (var1 >= 1 && var2 < 1) {
             holder.agendaIndicator.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             holder.agendaIndicator.setVisibility(View.GONE);
         }
-        Log.d("TIME",startDate.toString());
-        Log.d("TIME1",endDate.toString());
-        Log.d("VAR1",String.valueOf(var1));
+        Log.d("TIME", startDate.toString());
+        Log.d("TIME1", endDate.toString());
+        Log.d("VAR1", String.valueOf(var1));
     }
 
     @Override
@@ -96,7 +96,7 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
             agendaImageView = itemView.findViewById(R.id.iv_agenda_icon);
             agendaTitle = itemView.findViewById(R.id.tv_agenda_title);
             agendaTime = itemView.findViewById(R.id.tv_agenda_time);
-            agendaIndicator=itemView.findViewById(R.id.iv_agenda_indicator);
+            agendaIndicator = itemView.findViewById(R.id.iv_agenda_indicator);
 
         }
 
