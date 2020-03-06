@@ -67,16 +67,17 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
 
         Date startDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getStartTime());
         Date endDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getEndTime());
-        int var1 = UtilsInterface.compareDates(startDate);
-        int var2 = UtilsInterface.compareDates(endDate);
-        if (var1 >= 1 && var2 < 1) {
+        int compareStartDateResult = UtilsInterface.compareDates(startDate);
+        int compareEndDateResult = UtilsInterface.compareDates(endDate);
+        if (compareStartDateResult >= 1 && compareEndDateResult < 1) {
             holder.agendaIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.agendaIndicator.setVisibility(View.GONE);
         }
         Log.d("TIME", startDate.toString());
         Log.d("TIME1", endDate.toString());
-        Log.d("VAR1", String.valueOf(var1));
+        Log.d("VAR1", String.valueOf(compareStartDateResult));
+        Log.d("VAR2", String.valueOf(compareEndDateResult));
     }
 
     @Override
