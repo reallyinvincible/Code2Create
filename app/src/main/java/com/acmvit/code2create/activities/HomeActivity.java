@@ -56,8 +56,6 @@ public class HomeActivity extends AppCompatActivity {
 
         initializeViews();
 
-        setupNetworkListener();
-
         fragmentSwitchInterface = new FragmentSwitchInterface() {
             @Override
             public void switchToAbout() {
@@ -115,6 +113,8 @@ public class HomeActivity extends AppCompatActivity {
                 HomeActivity.this.hideInternetCard();
             }
         };
+
+        setupNetworkListener();
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override

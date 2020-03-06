@@ -20,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdapterViewHolder> {
 
-    List<Agenda> agendaList;
+    private List<Agenda> agendaList;
+
+
 
     public AgendaAdapter(List<Agenda> agendaList) {
         this.agendaList = agendaList;
@@ -38,7 +40,9 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
     public void onBindViewHolder(@NonNull AgendaAdapterViewHolder holder, int position) {
         Agenda agenda = agendaList.get(position);
         holder.agendaTitle.setText(agenda.getAgendaTitle());
-        holder.agendaTime.setText(agenda.getStartTime());
+        String[] date = agenda.getDate().split("-");
+        String displayDate = date[0] + "th " + date[1];
+        holder.agendaTime.setText(displayDate + ", " + agenda.getStartTime());
         switch (agenda.getType()) {
             case "reg":
                 holder.agendaImageView.setImageDrawable(holder.agendaImageView
@@ -67,17 +71,15 @@ public class AgendaAdapter extends RecyclerView.Adapter<AgendaAdapter.AgendaAdap
 
         Date startDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getStartTime());
         Date endDate = UtilsInterface.getDateObject(agenda.getDate(), agenda.getEndTime());
-        int compareStartDateResult = UtilsInterface.compareDates(startDate);
-        int compareEndDateResult = UtilsInterface.compareDates(endDate);
-        if (compareStartDateResult >= 1 && compareEndDateResult < 1) {
+        if (UtilsInterface.compareDates(startDate) >= 1 && UtilsInterface.compareDates(endDate) < 0) {
+            holder.agendaIndicator.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.agenda_activated_indicator));
+            holder.agendaIndicator.setVisibility(View.VISIBLE);
+        } else if (UtilsInterface.compareDates(endDate) >= 0){
+            holder.agendaIndicator.setImageDrawable(holder.itemView.getContext().getDrawable(R.drawable.agenda_deactivated_indicator));
             holder.agendaIndicator.setVisibility(View.VISIBLE);
         } else {
             holder.agendaIndicator.setVisibility(View.GONE);
         }
-        Log.d("TIME", startDate.toString());
-        Log.d("TIME1", endDate.toString());
-        Log.d("VAR1", String.valueOf(compareStartDateResult));
-        Log.d("VAR2", String.valueOf(compareEndDateResult));
     }
 
     @Override
