@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonAdapter;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.acmvit.code2create.adapters.AgendaAdapter;
-import com.acmvit.code2create.adapters.SkeletonAdapter;
 import com.acmvit.code2create.models.Agenda;
 import com.acmvit.code2create.R;
 import com.acmvit.code2create.models.AgendaModel;
@@ -53,7 +53,7 @@ public class AgendaFragment extends Fragment {
         return view;
     }
 
-    void fetchAgendaList(){
+    void fetchAgendaList() {
         agendaReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
