@@ -338,7 +338,6 @@ public class FoodCouponsFragment extends Fragment {
 
     private void updatePayload(final String payload, ImageView imageView) {
         getActivity().runOnUiThread(() -> {
-            Toast.makeText(context, "Enjoy your meal", Toast.LENGTH_SHORT).show();
             setRedeemedState(imageView);
             checkAttendance(currentScannable.getScannableValue());
         });
