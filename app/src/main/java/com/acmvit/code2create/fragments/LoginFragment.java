@@ -111,7 +111,6 @@ public class LoginFragment extends Fragment {
                     progressBar.setVisibility(View.VISIBLE);
                     disableUserInteraction();
                     userLogin(email, password);
-
                 } else {
                     showErrorSnackbar("Email or password missing");
                 }
